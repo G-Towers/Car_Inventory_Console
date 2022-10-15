@@ -1155,7 +1155,7 @@ void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err,
 
     else
     {
-        cout << "\nRecord found: " << arr[index].GetID() << " -- "
+        cout << "\nRecord found:\n\n" << arr[index].GetID() << " -- "
             << arr[index].GetModel() << " -- " << arr[index].GetQuantity() << " -- "
             << arr[index].GetPrice() << "\n"
             << "Index: " << index << endl;

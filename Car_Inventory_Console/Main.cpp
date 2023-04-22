@@ -95,6 +95,16 @@ int main()
         }
     } while (mainMenu != MainChoice::QUIT);
 
+    // Free the dynamic memory allocation.
+    delete [] carRec;
+    delete[] rawCarRec;
+
+    // Pointer array to nullptr.
+    for (int i = 0; i < MAX_SIZE; i++)
+    {
+        ptrRec[i] = nullptr;
+    }
+
 
     return 0;
 }

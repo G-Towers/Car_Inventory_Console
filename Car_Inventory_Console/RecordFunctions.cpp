@@ -2,6 +2,38 @@
 
 #include "RecordFunctions.h"
 
+int MenuUserInput()
+{
+    // For user input.
+    string stringInput = "";
+    int intInput = 0;
+
+    // Get user input.
+    getline(cin, stringInput);
+
+    // Check if nothing is entered.
+    while (stringInput == "")
+    {
+        cout << "\nYou didn't enter anything!\n";
+        cout << "\nEnter your selection: ";
+        getline(cin, stringInput);
+    }
+
+    // Check if too many characters are entered.
+    while (stringInput.length() > 2)
+    {
+        cout << "\nYou entered too many characters!\n";
+        cout << "\nEnter your selection: ";
+        getline(cin, stringInput);
+    }
+
+    // Convert string to integer.
+    intInput = atoi(stringInput.c_str());
+
+
+    return intInput;
+}
+
 
 void DisplayMainMenu()
 {
@@ -759,14 +791,13 @@ void BubbleSort(Record* pArr[], int size, bool(*cmp)(const Record*, const Record
 
 void SortWrpr(Record* ptrRec[], int& arrSize)
 {
-    int subInput;   // user input for sub menu.
     SortChoice sortMenu = SortChoice::SORT_ID;
 
     do
     {
         DisplaySortMenu();
-        cin >> subInput;
-        sortMenu = (SortChoice)subInput; // cast to enum type.
+        int userInput = MenuUserInput();    // user input.
+        sortMenu = (SortChoice)userInput; // cast to enum type.
 
         switch (sortMenu)
         {
@@ -836,7 +867,7 @@ void Search(const Record arr[], const int& sizeUsed)
 
     cout << "\nSearch Records --\n" << endl;
     cout << "Enter a term to search for: ";
-    cin >> searchStr;
+    getline(cin, searchStr);
     cout << endl;
 
     SearchRec(arr, searchRec, sizeUsed, searchCount, searchStr);
@@ -855,10 +886,9 @@ void ManageItem(Record arr[], Record* pArr[], Record arr_in[], Record rawArr[], 
     do
     {
         DisplayItemMenu();
-        cin >> ItemInput;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        ItemMenu = (ItemChoice)ItemInput; // cast to enum type.
+        int userInput = MenuUserInput();
+
+        ItemMenu = (ItemChoice)userInput; // cast to enum type.
 
         switch (ItemMenu)
         {

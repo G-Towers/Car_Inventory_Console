@@ -11,10 +11,6 @@ int main()
     int errCount = 0;    // How many records with errors in file.
     int inputCount = 0; // Array size for inputRec.
 
-    // For user input.
-    string stringInput = "";
-    int intInput = 0;
-
     // Error message strings.
     string idErrMsg = "";
     string mdlErrMsg = "";
@@ -41,30 +37,9 @@ int main()
 
     do
     {
-        // Display the menu and prompt user for input.
-        DisplayMainMenu();
-        getline(cin, stringInput);
-
-        // Check if nothing is entered.
-        while (stringInput == "")
-        {
-            cout << "\nYou didn't enter anything!\n";
-            cout << "\nEnter your selection: ";
-            getline(cin, stringInput);
-        }
-
-        // Check if too many characters are entered.
-        while (stringInput.length() > 2)
-        {
-            cout << "\nYou entered too many characters!\n";
-            cout << "\nEnter your selection: ";
-            getline(cin, stringInput);
-        }
-
-        // Convert string to integer.
-        intInput = atoi(stringInput.c_str());
-
-        mainMenu = (MainChoice)intInput; // cast to enum type.
+        DisplayMainMenu();  // Display the main menu.
+        int userInput = MenuUserInput();    // user input.
+        mainMenu = (MainChoice)userInput; // cast to enum type.
 
         switch (mainMenu)
         {

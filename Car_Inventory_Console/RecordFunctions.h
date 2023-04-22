@@ -4,6 +4,9 @@
 
 #include "Record.h"
 
+// Function for User input on menus.
+int MenuUserInput();
+
 // Displays the main menu to the screen.
 void DisplayMainMenu();
 

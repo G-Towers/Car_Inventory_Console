@@ -23,8 +23,9 @@ int main()
     // Daclare array objects.
     Record* carRec = new Record[MAX_SIZE];  // Main record array of automobiles allocated dynamically.
     Record* rawCarRec = new Record[MAX_SIZE];   // Array for unaltered record file.
+    Record* inputRec = new Record[MAX_SIZE];  // Temp record array for new records.
     Record* ptrRec[MAX_SIZE] = { nullptr };   // Parallel array of pointers.
-    Record inputRec[MAX_SIZE];  // Temp record array for new records.
+    
 
     // Read and validate the inventory of automobiles from the file.
     ReadFile(carRec, ptrRec, errorMsgs, count, errCount, idErrMsg,
@@ -71,8 +72,9 @@ int main()
     } while (mainMenu != MainChoice::QUIT);
 
     // Free the dynamic memory allocation.
-    delete [] carRec;
+    delete[] carRec;
     delete[] rawCarRec;
+    delete[] inputRec;
 
     // Pointer array to nullptr.
     for (int i = 0; i < MAX_SIZE; i++)

@@ -130,7 +130,7 @@ void DisplayErrFile()
 
 }
 
-void ReadFile(RecordArray reArr, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
+void ReadFile(RecordArray recArr, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
     string& id_err, string& mod_err, string& quant_err, string& prc_err)
 {
     // Initialize array sizes.
@@ -165,13 +165,13 @@ void ReadFile(RecordArray reArr, Record* pArr[], string errMsgs[], int& arrSize,
         if (IDValid(id, id_err) && ModelValid(mod, mod_err) && QuantityValid(quant, quant_err) && PriceValid(prc, prc_err))
         {
             // Write entries to record array.
-            arr[arrSize].SetID(ToUpper(id));
-            arr[arrSize].SetModel(ToUpper(mod));
-            arr[arrSize].SetQuantity(stoi(quant));
-            arr[arrSize].SetPrice(stof(prc));
+            recArr.rec[arrSize].SetID(ToUpper(id));
+            recArr.rec[arrSize].SetModel(ToUpper(mod));
+            recArr.rec[arrSize].SetQuantity(stoi(quant));
+            recArr.rec[arrSize].SetPrice(stof(prc));
 
             // Assign pointers.
-            pArr[arrSize] = &arr[arrSize];
+            pArr[arrSize] = &recArr.rec[arrSize];
 
             arrSize++;  // Increment the size of the array.
         }
@@ -265,10 +265,10 @@ void RawReadFile(RecordArray recArr, int& arrSize)
         inputFile >> id >> mod >> quant >> prc;
 
         // Write entries to record array.
-        arr[arrSize].SetID(id);
-        arr[arrSize].SetModel(mod);
-        arr[arrSize].SetQuantity(stoi(quant));
-        arr[arrSize].SetPrice(stof(prc));
+        recArr.rec[arrSize].SetID(id);
+        recArr.rec[arrSize].SetModel(mod);
+        recArr.rec[arrSize].SetQuantity(stoi(quant));
+        recArr.rec[arrSize].SetPrice(stof(prc));
 
         arrSize++;  // Increment the size of the array.
 
@@ -325,7 +325,7 @@ void WriteErrorFile(string errMsgs[], const int& errSize)
 
 }
 
-void WriteFile(Record arr[], const int& arrSize)
+void WriteFile(RecordArray recArr, const int& arrSize)
 {
 
     // Declare file stream.
@@ -350,18 +350,18 @@ void WriteFile(Record arr[], const int& arrSize)
     // Write to the file.
     for (int i = 0; i < arrSize - 1; i++)
     {
-        outputFile << arr[i].GetID() << " " << arr[i].GetModel() << " " << arr[i].GetQuantity()
-            << " " << arr[i].GetPrice() << endl;
+        outputFile << recArr.rec[i].GetID() << " " << recArr.rec[i].GetModel() << " " << recArr.rec[i].GetQuantity()
+            << " " << recArr.rec[i].GetPrice() << endl;
     }
-    outputFile << arr[arrSize - 1].GetID() << " " << arr[arrSize - 1].GetModel() << " " << arr[arrSize - 1].GetQuantity()
-        << " " << arr[arrSize - 1].GetPrice();
+    outputFile << recArr.rec[arrSize - 1].GetID() << " " << recArr.rec[arrSize - 1].GetModel() << " " << recArr.rec[arrSize - 1].GetQuantity()
+        << " " << recArr.rec[arrSize - 1].GetPrice();
 
     // Close the file.
     outputFile.close();
 
 }
 
-void WriteAppendFile(Record arr[], const int& arrSize)
+void WriteAppendFile(RecordArray recArr, const int& arrSize)
 {
 
     // Declare file stream.
@@ -391,8 +391,8 @@ void WriteAppendFile(Record arr[], const int& arrSize)
     // Write to the file.
     for (int i = 0; i < arrSize; i++)
     {
-        outputFile << "\n" << arr[i].GetID() << " " << arr[i].GetModel() << " " << arr[i].GetQuantity()
-            << " " << arr[i].GetPrice();
+        outputFile << "\n" << recArr.rec[i].GetID() << " " << recArr.rec[i].GetModel() << " " << recArr.rec[i].GetQuantity()
+            << " " << recArr.rec[i].GetPrice();
     }
 
     // Close the file.
@@ -572,7 +572,7 @@ void Print(RecordArray recArr, const int& arrSize)
         // Print the array.
         for (int i = 0; i < arrSize; i++)
         {
-            cout << ToString(recArr.) << endl;
+            cout << ToString(recArr.rec[i]) << endl;
         }
     }
 
@@ -639,7 +639,7 @@ string ToUpper(string target)
     return tempString;
 }
 
-void SearchRec(const Record arr[], Record searchArr[], const int& arrSize, int& searchSize, string target)
+void SearchRec(const RecordArray recArr, Record searchArr[], const int& arrSize, int& searchSize, string target)
 {
 
     string tempTarget = ToLower(target);    // Temporary target to lowercase string.
@@ -657,8 +657,8 @@ void SearchRec(const Record arr[], Record searchArr[], const int& arrSize, int& 
     for (int i = 0; i < arrSize; i++)
     {
         // Temporary lowercase strings for ID and model.
-        string tempID = ToLower(arr[i].GetID());
-        string tempModel = ToLower(arr[i].GetModel());
+        string tempID = ToLower(recArr.rec[i].GetID());
+        string tempModel = ToLower(recArr.rec[i].GetModel());
 
 
         // Search string tempID, char_arr is the target, start at index 0, search 3 chars.
@@ -668,7 +668,7 @@ void SearchRec(const Record arr[], Record searchArr[], const int& arrSize, int& 
         // Compare records (linear search).
         if ((tempTarget == tempID || tempTarget == tempModel))
         {
-            linearSrch[linearSize] = arr[i];
+            linearSrch[linearSize] = recArr.rec[i];
             linearSize++;
 
         }
@@ -676,7 +676,7 @@ void SearchRec(const Record arr[], Record searchArr[], const int& arrSize, int& 
         // Partial search.
         else if ((idFound != string::npos || modelFound != string::npos))
         {
-            partialSrch[partialSize] = arr[i];
+            partialSrch[partialSize] = recArr.rec[i];
             partialSize++;
         }
 
@@ -704,7 +704,7 @@ void SearchRec(const Record arr[], Record searchArr[], const int& arrSize, int& 
 
 }
 
-int SearchID(const Record arr[], const int& arrSize, string target)
+int SearchID(const RecordArray recArr, const int& arrSize, string target)
 {
     int index = 0;  // Index of array for linear search.
     string tempTarget = ToLower(target);    // Temporary target to lowercase string.
@@ -714,12 +714,12 @@ int SearchID(const Record arr[], const int& arrSize, string target)
     for (int i = 0; i < arrSize; i++)
     {
         // Temporary lowercase strings for ID.
-        string tempID = ToLower(arr[i].GetID());
+        string tempID = ToLower(recArr.rec[i].GetID());
 
         // Compare records (linear search).
         if (tempTarget == tempID)
         {
-            linearSrch[index] = arr[i];
+            linearSrch[index] = recArr.rec[i];
 
             return index;
         }
@@ -731,11 +731,11 @@ int SearchID(const Record arr[], const int& arrSize, string target)
     return -1;
 }
 
-bool IDExists(const Record arr[], const int& arrSize, string id)
+bool IDExists(const RecordArray recArr, const int& arrSize, string id)
 {
     for (size_t i = 0; i < arrSize; i++)
     {
-        if (ToLower(id) == ToLower(arr[i].GetID()))
+        if (ToLower(id) == ToLower(recArr.rec[i].GetID()))
         {
             return true;
         }
@@ -870,7 +870,7 @@ void Search(const RecordArray recArr, const int& sizeUsed)
     getline(cin, searchStr);
     cout << endl;
 
-    SearchRec(arr, searchRec, sizeUsed, searchCount, searchStr);
+    SearchRec(recArr, searchRec, sizeUsed, searchCount, searchStr);
     PrintSearchResults(searchRec, searchCount);
 
     searchCount = 0;    // Reset the search array.
@@ -893,7 +893,7 @@ void ManageItem(RecordArray recArr, Record* pArr[], RecordArray arr_in, RecordAr
         switch (ItemMenu)
         {
         case ItemChoice::INPUT_ITEM:
-            arr_in[arrSize_in] = InputRecord(rawArr, rawSize, id_err,
+            arr_in.rec[arrSize_in] = InputRecord(rawArr, rawSize, id_err,
                        mod_err, quant_err, prc_err);
             arrSize_in++;
             break;
@@ -903,7 +903,7 @@ void ManageItem(RecordArray recArr, Record* pArr[], RecordArray arr_in, RecordAr
             break;
         case ItemChoice::DELETE_ITEM:
             DeleteRecord(rawArr, rawSize, id_err);
-            ReadFile(arr, pArr, errMsgs, arrSize, errSize, id_err,
+            ReadFile(recArr, pArr, errMsgs, arrSize, errSize, id_err,
                     mod_err, quant_err, prc_err);
             break;
         case ItemChoice::PRINT_ITEM:
@@ -911,7 +911,7 @@ void ManageItem(RecordArray recArr, Record* pArr[], RecordArray arr_in, RecordAr
             break;
         case ItemChoice::SAVE_ITEM:
             SaveRecord(arr_in, arrSize_in);
-            ReadFile(arr, pArr, errMsgs, arrSize, errSize, id_err,
+            ReadFile(recArr, pArr, errMsgs, arrSize, errSize, id_err,
                 mod_err, quant_err, prc_err);
             break;
         case ItemChoice::PREV_MENU:
@@ -978,13 +978,13 @@ void SortPrice(Record* ptrArr[], int& arrSize)
     PrintSorted(ptrArr, arrSize);
 }
 
-Record InputRecord(Record arr[], int& arrSize, string& id_err,
+Record InputRecord(RecordArray recArr, int& arrSize, string& id_err,
                 string& mod_err, string& quant_err, string& prc_err)
 {
     string id, mod, quant, prc;
     Record tempRec; // Temporary Record.
 
-    id = InputID(arr, arrSize, id_err);
+    id = InputID(recArr, arrSize, id_err);
     tempRec.SetID(id);
 
     mod = InputModel(mod_err);
@@ -1000,7 +1000,7 @@ Record InputRecord(Record arr[], int& arrSize, string& id_err,
         
 }
 
-string InputID(Record arr[], int& arrSize, string& id_err)
+string InputID(RecordArray recArr, int& arrSize, string& id_err)
 {
     string id;
 
@@ -1036,7 +1036,7 @@ string InputID(Record arr[], int& arrSize, string& id_err)
     }
 
     // Check if ID exists.
-    while (IDExists(arr, arrSize, id))
+    while (IDExists(recArr, arrSize, id))
     {
         cout << "\nThat ID is already in use." << endl;
         cout << "\nEnter ID: ";
@@ -1155,7 +1155,7 @@ string InputPrice(string& prc_err)
     return prc;
 }
 
-void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err, 
+void EditRecord(RecordArray recArr, int& arrSize, string& id_err, string& mod_err, 
                 string& quant_err, string& prc_err)
 {
     string id, mod, quant, prc; // Store edited input.
@@ -1176,7 +1176,7 @@ void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err,
     }
 
     // Search for the ID.
-    int index = SearchID(arr, arrSize, editID);
+    int index = SearchID(recArr, arrSize, editID);
 
     if (index == -1)
     {
@@ -1185,9 +1185,9 @@ void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err,
 
     else
     {
-        cout << "\nRecord found: " << arr[index].GetID() << " -- "
-            << arr[index].GetModel() << " -- " << arr[index].GetQuantity() << " -- "
-            << arr[index].GetPrice() << "\n"
+        cout << "\nRecord found: " << recArr.rec[index].GetID() << " -- "
+            << recArr.rec[index].GetModel() << " -- " << recArr.rec[index].GetQuantity() << " -- "
+            << recArr.rec[index].GetPrice() << "\n"
             << "Index: " << index << endl;
 
         cout << "\nEdit this record? (y/n):";
@@ -1201,10 +1201,10 @@ void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err,
             EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
 
             // Store temporary record.
-            tempRec.SetID(arr[index].GetID());
-            tempRec.SetModel(arr[index].GetModel());
-            tempRec.SetQuantity(arr[index].GetQuantity());
-            tempRec.SetPrice(arr[index].GetPrice());
+            tempRec.SetID(recArr.rec[index].GetID());
+            tempRec.SetModel(recArr.rec[index].GetModel());
+            tempRec.SetQuantity(recArr.rec[index].GetQuantity());
+            tempRec.SetPrice(recArr.rec[index].GetPrice());
 
             do
             {
@@ -1217,7 +1217,7 @@ void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err,
                 switch (editMenu)
                 {
                 case EditChoice::EDIT_ID:
-                    tempRec.SetID(InputID(arr, arrSize, id_err));
+                    tempRec.SetID(InputID(recArr, arrSize, id_err));
                     break;
                 case EditChoice::EDIT_MODEL:
                     tempRec.SetModel(InputModel(mod_err));
@@ -1229,15 +1229,15 @@ void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err,
                     tempRec.SetPrice(stof(InputPrice(prc_err)));
                     break;
                 case EditChoice::EDIT_RECORD:
-                    tempRec = InputRecord(arr, arrSize, id_err, mod_err, 
+                    tempRec = InputRecord(recArr, arrSize, id_err, mod_err, 
                                         quant_err, prc_err);
                     break;
                 case EditChoice::DISPLAY_RECORD:
                     PrintRecord(tempRec);
                     break;
                 case EditChoice::SAVE_RECORD:
-                    arr[index] = tempRec;
-                    WriteFile(arr, arrSize);
+                    recArr.rec[index] = tempRec;
+                    WriteFile(recArr, arrSize);
                     cout << "\nRecord replaced." << endl;
                     break;
                 case EditChoice::BACK_PREV:
@@ -1256,7 +1256,7 @@ void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err,
     
 }
 
-void DeleteRecord(Record arr[], int& arrSize, string& id_err)
+void DeleteRecord(RecordArray recArr, int& arrSize, string& id_err)
 {
     string delID;   // ID to delete.
     char resp;  // User response. 
@@ -1291,7 +1291,7 @@ void DeleteRecord(Record arr[], int& arrSize, string& id_err)
 
     }
 
-    int index = SearchID(arr, arrSize, delID);
+    int index = SearchID(recArr, arrSize, delID);
 
     if (index == -1)
     {
@@ -1301,9 +1301,9 @@ void DeleteRecord(Record arr[], int& arrSize, string& id_err)
     else
     {
         // Display record if found.
-        cout << "\nRecord found: " << arr[index].GetID() << " "
-            << arr[index].GetModel() << " " << arr[index].GetQuantity() << " "
-            << arr[index].GetPrice() << "\n"
+        cout << "\nRecord found: " << recArr.rec[index].GetID() << " "
+            << recArr.rec[index].GetModel() << " " << recArr.rec[index].GetQuantity() << " "
+            << recArr.rec[index].GetPrice() << "\n"
             << "Index: " << index << endl;
 
         cout << "\nDelete record on file? (y/n): ";
@@ -1315,11 +1315,11 @@ void DeleteRecord(Record arr[], int& arrSize, string& id_err)
         {
             for (int i = index; i < arrSize - 1; i++)
             {
-                arr[i] = arr[i + 1];
+                recArr.rec[i] = recArr.rec[i + 1];
             }
             arrSize--;
 
-            WriteFile(arr, arrSize);
+            WriteFile(recArr, arrSize);
             cout << "\nRecord deleted." << endl;
 
         }
@@ -1327,13 +1327,13 @@ void DeleteRecord(Record arr[], int& arrSize, string& id_err)
 
 }
 
-void PrintRecord(Record arr[], int& arrSize)
+void PrintRecord(RecordArray recArr, int& arrSize)
 {
     cout << "\nDisplay Entered Records --\n" << endl;
-    Print(arr, arrSize); // Print records to screen.
+    Print(recArr, arrSize); // Print records to screen.
 }
 
-void SaveRecord(Record arr[], int& arrSize)
+void SaveRecord(RecordArray recArr, int& arrSize)
 {
     char resp;
 
@@ -1342,7 +1342,7 @@ void SaveRecord(Record arr[], int& arrSize)
 
     if (resp == 'y' || resp == 'Y')
     {
-        WriteAppendFile(arr, arrSize);
+        WriteAppendFile(recArr, arrSize);
         cout << "\nRecord saved." << endl;
     }
 }

@@ -39,10 +39,10 @@ void RawReadFile(RecordArray recArr, int& arrSize);
 void WriteErrorFile(string errMsgs[], const int& errSize);
 // Writes errors/error messages to error file.
 
-void WriteFile(Record arr[], const int& arrSize);
+void WriteFile(RecordArray recArr, const int& arrSize);
 // Writes to the output file (replaces all).
 
-void WriteAppendFile(Record arr[], const int& arrSize);
+void WriteAppendFile(RecordArray recArr, const int& arrSize);
 //	Appends entries to the output file.
 
 bool IDValid(string id, string& err);
@@ -79,14 +79,14 @@ string ToLower(string target);
 string ToUpper(string target);
 // returns a string in uppercase. 
 
-void SearchRec(const Record arr[], Record searchArr[], const int& sizeUsed, int& searchSize, string target);
+void SearchRec(const RecordArray recArr, Record searchArr[], const int& sizeUsed, int& searchSize, string target);
 // Uses linear search and partial search to search a Record for a string.
 
-int SearchID(const Record arr[], const int& arrSize, string target);
+int SearchID(const RecordArray recArr, const int& arrSize, string target);
 // Uses linear search to search for ID. Returns the index of ID if found.
 // Otherwise returns -1.
 
-bool IDExists(const Record arr[], const int& arrSize, string id);
+bool IDExists(const RecordArray recArr, const int& arrSize, string id);
 // Uses linear search to determine whether ID is in use
 // Returns true if ID exists otherwise returns false.
 
@@ -126,20 +126,20 @@ void SortPrice(Record* arr[], int& arrSize);
 
 
 // Functions for switch statements on item management menu.
-Record InputRecord(Record arr[], int& arrSize, string& id_err, 
+Record InputRecord(RecordArray recArr, int& arrSize, string& id_err, 
 				string& mod_err, string& quant_err, string& prc_err);	// Input new records to input array.
-string InputID(Record arr[], int& arrSize, string& id_err);
+string InputID(RecordArray recArr, int& arrSize, string& id_err);
 string InputModel(string& mod_err);
 string InputQuantity(string& quant_err);
 string InputPrice(string& prc_err);
 
 
 // Functions for edit record menu.
-void EditRecord(Record arr[], int& arrSize, string& id_err, string& mod_err, 
+void EditRecord(RecordArray recArr, int& arrSize, string& id_err, string& mod_err, 
 				string& quant_err, string& prc_err);	// Edits a record from the record file.
-void DeleteRecord(Record arr[], int& arrSize, string& id_err);	// Deletes a record from the record file.
-void PrintRecord(Record arr[], int& arrSize);	// Prints newly entered records from input array.
-void SaveRecord(Record arr[], int& arrSize);	// Appends new records to the record file.
+void DeleteRecord(RecordArray recArr, int& arrSize, string& id_err);	// Deletes a record from the record file.
+void PrintRecord(RecordArray recArr, int& arrSize);	// Prints newly entered records from input array.
+void SaveRecord(RecordArray recArr, int& arrSize);	// Appends new records to the record file.
 
 
 

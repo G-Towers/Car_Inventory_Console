@@ -11,14 +11,16 @@ public:
 	RecordArray()
 	{
 		rec = new Record[MAX_SIZE];
+		
 	}
 
 	~RecordArray()
 	{
 		delete [] rec;
+		rec = nullptr;
 	}
 
-private:
+public:
 	Record* rec;
 	
 

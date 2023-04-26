@@ -130,7 +130,7 @@ void DisplayErrFile()
 
 }
 
-void ReadFile(Record arr[], Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
+void ReadFile(RecordArray reArr, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
     string& id_err, string& mod_err, string& quant_err, string& prc_err)
 {
     // Initialize array sizes.
@@ -235,7 +235,7 @@ void ReadFile(Record arr[], Record* pArr[], string errMsgs[], int& arrSize, int&
 
 }
 
-void RawReadFile(Record arr[], int& arrSize)
+void RawReadFile(RecordArray recArr, int& arrSize)
 {
     // Initialize array sizes.
     arrSize = 0;
@@ -846,10 +846,10 @@ void PrintSorted(Record* arr[], const int arrSize)
     }
 }
 
-void PrintAll(Record arr[], int& arrSize)
+void PrintAll(RecordArray recArr, int& arrSize)
 {
     cout << "\nDisplay All Records --\n" << endl;
-    Print(arr, arrSize); // Print the records.
+    Print(recArr, arrSize); // Print the records.
 }
 
 void PrintInvalid(int& err)
@@ -859,7 +859,7 @@ void PrintInvalid(int& err)
     DisplayErrFile();
 }
 
-void Search(const Record arr[], const int& sizeUsed)
+void Search(const RecordArray recArr, const int& sizeUsed)
 {
     int searchCount = 0;    // Search object array size.
     string searchStr;   // User search.
@@ -876,7 +876,7 @@ void Search(const Record arr[], const int& sizeUsed)
     searchCount = 0;    // Reset the search array.
 }
 
-void ManageItem(Record arr[], Record* pArr[], Record arr_in[], Record rawArr[], string errMsgs[],
+void ManageItem(RecordArray recArr, Record* pArr[], RecordArray arr_in, RecordArray rawArr, string errMsgs[],
                 int& arrSize, int& arrSize_in, int& rawSize, int& errSize,
                 string& id_err, string& mod_err, string& quant_err, string& prc_err)
 {

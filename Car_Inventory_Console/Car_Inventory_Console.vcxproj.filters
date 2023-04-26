@@ -24,12 +24,18 @@
     <ClCompile Include="RecordFunctions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RecordArray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Record.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RecordFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RecordArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

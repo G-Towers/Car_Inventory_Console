@@ -554,7 +554,7 @@ bool PriceValid(string prc, string& err)
 
 }
 
-void Print(Record arr[], const int& arrSize)
+void Print(RecordArray recArr, const int& arrSize)
 {
 
     cout << "Valid records: " << arrSize << '\n' << endl;
@@ -572,7 +572,7 @@ void Print(Record arr[], const int& arrSize)
         // Print the array.
         for (int i = 0; i < arrSize; i++)
         {
-            cout << ToString(arr[i]) << endl;
+            cout << ToString(recArr.) << endl;
         }
     }
 

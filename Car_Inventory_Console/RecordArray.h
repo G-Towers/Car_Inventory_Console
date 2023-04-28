@@ -10,18 +10,22 @@ class RecordArray
 public:
 	RecordArray()
 	{
-		rec = new Record[MAX_SIZE];
+		recArr = new Record[MAX_SIZE];
 		
 	}
 
 	~RecordArray()
 	{
-		delete [] rec;
-		rec = nullptr;
+		delete [] recArr;
+		recArr = nullptr;
 	}
 
-public:
-	Record* rec;
+	// Member access
+	Record* GetRecArr() const { return recArr; }
+	//void SetRecArr(string id, string mod, int quant, float pr);
+
+private:
+	Record* recArr;
 	
 
 };

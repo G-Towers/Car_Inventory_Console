@@ -130,7 +130,7 @@ void DisplayErrFile()
 
 }
 
-void ReadFile(RecordArray recArr, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
+void ReadFile(RecordArray& recArr, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
     string& id_err, string& mod_err, string& quant_err, string& prc_err)
 {
     // Initialize array sizes.
@@ -235,7 +235,7 @@ void ReadFile(RecordArray recArr, Record* pArr[], string errMsgs[], int& arrSize
 
 }
 
-void RawReadFile(RecordArray recArr, int& arrSize)
+void RawReadFile(RecordArray& recArr, int& arrSize)
 {
     // Initialize array sizes.
     arrSize = 0;
@@ -554,7 +554,7 @@ bool PriceValid(string prc, string& err)
 
 }
 
-void Print(RecordArray recArr, const int& arrSize)
+void Print(const RecordArray& recArr, const int& arrSize)
 {
 
     cout << "Valid records: " << arrSize << '\n' << endl;
@@ -846,7 +846,7 @@ void PrintSorted(Record* arr[], const int arrSize)
     }
 }
 
-void PrintAll(RecordArray recArr, int& arrSize)
+void PrintAll(const RecordArray& recArr, int& arrSize)
 {
     cout << "\nDisplay All Records --\n" << endl;
     Print(recArr, arrSize); // Print the records.

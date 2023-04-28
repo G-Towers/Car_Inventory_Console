@@ -45,8 +45,8 @@ int main()
         switch (mainMenu)
         {
         case MainChoice::PRINT_ALL:
-            ReadFile(carRec, ptrRec, errorMsgs, count, errCount, idErrMsg,
-                    mdlErrMsg, quantErrMsg, prcErrMsg);
+             //ReadFile(carRec, ptrRec, errorMsgs, count, errCount, idErrMsg,
+             //       mdlErrMsg, quantErrMsg, prcErrMsg);
             PrintAll(carRec, count);
             break;
         case MainChoice::PRINT_INVALID:

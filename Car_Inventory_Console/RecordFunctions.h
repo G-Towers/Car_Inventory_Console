@@ -25,13 +25,13 @@ void DisplayErrFile();
 // Precondition: "error.txt" is available to read from.
 // Postcondition: Prints the error file to the screen.
 
-void ReadFile(RecordArray recArr, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
+void ReadFile(RecordArray& recArr, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
 	string& id_err, string& mod_err, string& quant_err, string& prc_err);
 // Reads and validates entries from the input file.
 // Precondition: "record.txt" must be available to read input from.
 // Postcondition: Validated records from  input file are written to the main record array.
 
-void RawReadFile(RecordArray recArr, int& arrSize);
+void RawReadFile(RecordArray& recArr, int& arrSize);
 // Reads entries from the input file (does not validate).
 // Precondition: "record.txt" must be available to read input from.
 // Postcondition: All records from input file whether valid or not are written to a raw record array.
@@ -60,7 +60,7 @@ bool QuantityValid(string quant, string& err);
 bool PriceValid(string prc, string& err);
 // Validates Price.
 
-void Print(RecordArray recArr, const int& arrSize);
+void Print(const RecordArray& recArr, const int& arrSize);
 // Prints the entries to the screen.
 // Precondition: Takes a Record array object and array size is passed by reference.
 // Postcondition: Prints the formatted Record array object to the screen.
@@ -107,7 +107,7 @@ void PrintSorted(Record* arr[], const int arrSize);
 /**************************************************************************************************************/
 
 // Functions for switch statements on main menu:
-void PrintAll(RecordArray recArr, int& arrSize);
+void PrintAll(const RecordArray& recArr, int& arrSize);
 void PrintInvalid(int& err);
 void Search(const RecordArray recArr, const int& sizeUsed);
 void ManageItem(RecordArray recArr, Record* pArr[], RecordArray arr_in, RecordArray rawArr, string errMsgs[], 

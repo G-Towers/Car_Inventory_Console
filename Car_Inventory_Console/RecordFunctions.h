@@ -8,6 +8,9 @@
 int MenuUserInput();
 // Function for User input on menus.
 
+string YesNoUserInput();
+// Function for yes or no responses from user.
+
 void DisplayMainMenu();
 // Displays the main menu to the screen.
 

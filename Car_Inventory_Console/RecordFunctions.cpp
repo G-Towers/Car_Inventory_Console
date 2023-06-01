@@ -34,6 +34,33 @@ int MenuUserInput()
     return intInput;
 }
 
+string YesNoUserInput()
+{
+    string stringInput;
+
+    // Get user input.
+    getline(cin, stringInput);
+
+    // Check if nothing is entered.
+    while (stringInput == "")
+    {
+        cout << "\nYou didn't enter anything!\n";
+        cout << "\nEnter your selection: ";
+        getline(cin, stringInput);
+    }
+
+    // Check if too many characters are entered.
+    while (stringInput.length() > 2)
+    {
+        cout << "\nYou entered too many characters!\n";
+        cout << "\nEnter your selection: ";
+        getline(cin, stringInput);
+    }
+
+    stringInput = ToUpper(stringInput);
+    return stringInput;
+}
+
 
 void DisplayMainMenu()
 {
@@ -932,7 +959,7 @@ void QuitMsg()
 void SelectionError()
 {
     cout << "\nError! Your selection is invalid." << endl;
-    cin.clear();
+    //cin.clear();
     //cin.ignore(numeric_limits<streamsize>::max(), '\n');
 }
 
@@ -1162,7 +1189,7 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
     Record tempRec; // Temporary Record.
 
     string editID;  // Search ID to locate record.
-    char recResp; //  User response to edit record.
+    string recResp; //  User response to edit record.
 
     cout << "\nEnter ID of record to edit: ";
     getline(cin, editID);
@@ -1191,11 +1218,9 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
             << "Index: " << index << endl;
 
         cout << "\nEdit this record? (y/n):";
-        cin >> recResp;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        recResp = YesNoUserInput();
 
-        if (recResp == 'y' || recResp == 'Y')
+        if (recResp == "Y" || recResp == "YES")
         {
             int editInput;   // user input for sub menu.
             EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
@@ -1209,9 +1234,8 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
             do
             {
                 DisplayEditItemMenu();
-                cin >> editInput;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                editInput = MenuUserInput();
+
                 editMenu = (EditChoice)editInput; // cast to enum type.
 
                 switch (editMenu)
@@ -1259,9 +1283,7 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
 void DeleteRecord(RecordArray& recArr_in, int& arrSize, string& id_err)
 {
     string delID;   // ID to delete.
-    char resp;  // User response. 
-    //cin.clear();
-    //cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    string resp;  // User response. 
 
     cout << "\nEnter ID for record to delete: ";
     getline(cin, delID);
@@ -1307,11 +1329,10 @@ void DeleteRecord(RecordArray& recArr_in, int& arrSize, string& id_err)
             << "Index: " << index << endl;
 
         cout << "\nDelete record on file? (y/n): ";
-        cin >> resp;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        resp = YesNoUserInput();
 
-        if (resp == 'y' || resp == 'Y')
+
+        if (resp == "Y" || resp == "YES")
         {
             for (int i = index; i < arrSize - 1; i++)
             {
@@ -1335,12 +1356,12 @@ void PrintRecord(RecordArray& recArr_in, int& arrSize)
 
 void SaveRecord(RecordArray& recArr_in, int& arrSize)
 {
-    char resp;
+    string resp;
 
     cout << "\nSave to record file? (y/n): ";
-    cin >> resp;
+    resp = YesNoUserInput();
 
-    if (resp == 'y' || resp == 'Y')
+    if (resp == "Y" || resp == "YES")
     {
         WriteAppendFile(recArr_in, arrSize);
         cout << "\nRecord saved." << endl;

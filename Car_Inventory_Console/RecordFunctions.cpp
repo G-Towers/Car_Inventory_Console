@@ -50,7 +50,7 @@ string YesNoUserInput()
     }
 
     // Check if too many characters are entered.
-    while (stringInput.length() > 2)
+    while (stringInput.length() > 3)
     {
         cout << "\nYou entered too many characters!\n";
         cout << "\nEnter your selection: ";

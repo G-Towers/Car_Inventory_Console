@@ -938,6 +938,7 @@ void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
             break;
         case ItemChoice::SAVE_ITEM:
             SaveRecord(inputArr_in, arrSize_in);
+            inputArr_in.ResetRecArr();
             ReadFile(recArr_in, pArr, errMsgs, arrSize, errSize, id_err,
                 mod_err, quant_err, prc_err);
             break;

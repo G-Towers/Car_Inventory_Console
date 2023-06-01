@@ -22,7 +22,10 @@ public:
 
 	// Member access
 	Record* GetRecArr() const { return recArr; }
-	//void SetRecArr(string id, string mod, int quant, float pr);
+	void ResetRecArr()
+	{
+		recArr = {};
+	}
 
 private:
 	Record* recArr;

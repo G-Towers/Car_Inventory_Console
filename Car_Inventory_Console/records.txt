@@ -13,3 +13,6 @@ ac777gt alpha_33_red 5 12.00
 ac777gt alpha_33_red 5 12.00
 af12345 Mad_12 0 1.00
 BC22155 Green_Goblin 200 12300.00
+cb77759 AlphaRed 20 21.00
+aa336gt AlphaBlue_66 5 123000.00
+cc122uu AlphaBlue_U 1 19.69

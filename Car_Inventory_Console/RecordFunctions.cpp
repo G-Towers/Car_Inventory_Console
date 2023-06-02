@@ -907,7 +907,7 @@ void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
                 int& arrSize, int& arrSize_in, int& rawSize, int& errSize,
                 string& id_err, string& mod_err, string& quant_err, string& prc_err)
 {
-    int ItemInput;   // user input for Item menu.
+    //int ItemInput;   // user input for Item menu.
     ItemChoice ItemMenu = ItemChoice::INPUT_ITEM;
 
     do
@@ -939,6 +939,7 @@ void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
         case ItemChoice::SAVE_ITEM:
             SaveRecord(inputArr_in, arrSize_in);
             inputArr_in.ResetRecArr();
+            arrSize_in = 0;
             ReadFile(recArr_in, pArr, errMsgs, arrSize, errSize, id_err,
                 mod_err, quant_err, prc_err);
             break;

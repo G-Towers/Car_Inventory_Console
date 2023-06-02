@@ -24,7 +24,8 @@ public:
 	Record* GetRecArr() const { return recArr; }
 	void ResetRecArr()
 	{
-		recArr = {};
+		delete [] recArr;
+		recArr = new Record[MAX_SIZE];
 	}
 
 private:

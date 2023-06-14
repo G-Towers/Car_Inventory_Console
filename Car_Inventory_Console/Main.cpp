@@ -21,10 +21,10 @@ int main()
     string errorMsgs[MAX_ERR_MSG] = { "" };
 
     // Daclare array objects.
-    RecordArray carRec;  // Main record array of automobiles allocated dynamically.
-    RecordArray rawCarRec;   // Array for unaltered record file.
-    RecordArray inputRec;  // Temp record array for new records.
-    Record* ptrRec[MAX_SIZE] = { nullptr };   // Parallel array of pointers.
+    RecordArray carRec;  // Main record array of valid automobiles (only valid records).
+    RecordArray rawCarRec;   // Array for unaltered record file (everthing on record file).
+    RecordArray inputRec;  // Temp record array for the input of new records.
+    Record* ptrRec[MAX_SIZE] = { nullptr };   // Parallel array of pointers (used for sorting).
     
 
     // Read and validate the inventory of automobiles from the file.

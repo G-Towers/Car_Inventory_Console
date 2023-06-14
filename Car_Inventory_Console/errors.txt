@@ -10,3 +10,12 @@ AC9971x Str^oLLer 25 0.00
 
 AB7005B almeria 26 -10.00
  -- Price must be greater than 0.
+
+2df 123_car -5 0.00
+ -- ID must be 7 characters long.
+ -- The first character in model must be an alpha character.
+ -- Quantity must be a positve number or 0.
+ -- Price must be greater than 0.
+
+fa22258 Universe 15 0.00
+ -- Price must be greater than 0.

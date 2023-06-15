@@ -114,8 +114,8 @@ void PrintAll(const RecordArray& recArr, int& arrSize);
 void PrintInvalid(int& err);
 void Search(const RecordArray& recArr_in, const int& sizeUsed);
 void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in, RecordArray& rawArr_in, string errMsgs[], 
-				int& arrSize, int& arrSize_in, int& rawSize, int& errSize,
-				string& id_err, string& mod_err, string& quant_err, string& prc_err);
+				int& arrSize, int& arrSize_in, int& rawSize, int& errSize, string& id_err, string& mod_err, 
+				string& quant_err, string& prc_err);
 void QuitMsg();
 void SelectionError();	// User input errors.
 
@@ -138,8 +138,9 @@ string InputPrice(string& prc_err);
 
 
 // Functions for edit record menu.
-void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mod_err, 
-				string& quant_err, string& prc_err);	// Edits a record from the record file.
+void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in, RecordArray& rawArr_in, string errMsgs[],
+			int& arrSize, int& arrSize_in, int& rawSize, int& errSize, string& id_err, string& mod_err,
+			string& quant_err, string& prc_err);	// Edits a record from the record file.
 void DeleteRecord(RecordArray& recArr_in, int& arrSize, string& id_err);	// Deletes a record from the record file.
 void PrintRecord(RecordArray& recArr_in, int& arrSize);	// Prints newly entered records from input array.
 void SaveRecord(RecordArray& recArr_in, int& arrSize);	// Appends new records to the record file.

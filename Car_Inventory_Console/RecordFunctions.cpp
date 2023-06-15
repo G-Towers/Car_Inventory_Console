@@ -925,8 +925,8 @@ void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
             arrSize_in++;
             break;
         case ItemChoice::EDIT_ITEM:
-            EditRecord(rawArr, rawSize, id_err, mod_err,
-                        quant_err, prc_err);
+            EditRecord(recArr_in, pArr, inputArr_in, rawArr, errMsgs, arrSize, arrSize_in, rawSize,
+                        errSize, id_err, mod_err, quant_err, prc_err);
             break;
         case ItemChoice::DELETE_ITEM:
             DeleteRecord(rawArr, rawSize, id_err);
@@ -1184,8 +1184,9 @@ string InputPrice(string& prc_err)
     return prc;
 }
 
-void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mod_err, 
-                string& quant_err, string& prc_err)
+void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in, RecordArray& rawArr_in, string errMsgs[],
+            int& arrSize, int& arrSize_in, int& rawSize, int& errSize, string& id_err, string& mod_err,
+            string& quant_err, string& prc_err)
 {
     string id, mod, quant, prc; // Store edited input.
     Record tempRec; // Temporary Record.
@@ -1205,7 +1206,7 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
     }
 
     // Search for the ID.
-    int index = SearchID(recArr_in, arrSize, editID);
+    int index = SearchID(rawArr_in, rawSize, editID);
 
     if (index == -1)
     {
@@ -1214,9 +1215,9 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
 
     else
     {
-        cout << "\nRecord found: " << recArr_in.GetRecArr()[index].GetID() << " -- "
-            << recArr_in.GetRecArr()[index].GetModel() << " -- " << recArr_in.GetRecArr()[index].GetQuantity() << " -- "
-            << recArr_in.GetRecArr()[index].GetPrice() << "\n"
+        cout << "\nRecord found: " << rawArr_in.GetRecArr()[index].GetID() << " -- "
+            << rawArr_in.GetRecArr()[index].GetModel() << " -- " << rawArr_in.GetRecArr()[index].GetQuantity() << " -- "
+            << rawArr_in.GetRecArr()[index].GetPrice() << "\n"
             << "Index: " << index << endl;
 
         cout << "\nEdit this record? (y/n):";
@@ -1228,10 +1229,10 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
             EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
 
             // Store temporary record.
-            tempRec.SetID(recArr_in.GetRecArr()[index].GetID());
-            tempRec.SetModel(recArr_in.GetRecArr()[index].GetModel());
-            tempRec.SetQuantity(recArr_in.GetRecArr()[index].GetQuantity());
-            tempRec.SetPrice(recArr_in.GetRecArr()[index].GetPrice());
+            tempRec.SetID(rawArr_in.GetRecArr()[index].GetID());
+            tempRec.SetModel(rawArr_in.GetRecArr()[index].GetModel());
+            tempRec.SetQuantity(rawArr_in.GetRecArr()[index].GetQuantity());
+            tempRec.SetPrice(rawArr_in.GetRecArr()[index].GetPrice());
 
             do
             {
@@ -1243,7 +1244,7 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
                 switch (editMenu)
                 {
                 case EditChoice::EDIT_ID:
-                    tempRec.SetID(InputID(recArr_in, arrSize, id_err));
+                    tempRec.SetID(InputID(rawArr_in, rawSize, id_err));
                     break;
                 case EditChoice::EDIT_MODEL:
                     tempRec.SetModel(InputModel(mod_err));
@@ -1255,15 +1256,17 @@ void EditRecord(RecordArray& recArr_in, int& arrSize, string& id_err, string& mo
                     tempRec.SetPrice(stof(InputPrice(prc_err)));
                     break;
                 case EditChoice::EDIT_RECORD:
-                    tempRec = InputRecord(recArr_in, arrSize, id_err, mod_err, 
+                    tempRec = InputRecord(rawArr_in, rawSize, id_err, mod_err, 
                                         quant_err, prc_err);
                     break;
                 case EditChoice::DISPLAY_RECORD:
                     PrintRecord(tempRec);
                     break;
                 case EditChoice::SAVE_RECORD:
-                    recArr_in.GetRecArr()[index] = tempRec;
-                    WriteFile(recArr_in, arrSize);
+                    rawArr_in.GetRecArr()[index] = tempRec;
+                    WriteFile(rawArr_in, rawSize);
+                    ReadFile(recArr_in, pArr, errMsgs, arrSize, errSize, id_err,
+                        mod_err, quant_err, prc_err);
                     cout << "\nRecord replaced." << endl;
                     break;
                 case EditChoice::BACK_PREV:

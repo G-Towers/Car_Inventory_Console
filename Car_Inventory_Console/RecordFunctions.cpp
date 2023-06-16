@@ -1031,7 +1031,7 @@ Record InputRecord(RecordArray& recArr_in, int& arrSize, string& id_err,
 
 string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
 {
-    string id;
+    string id = "";
 
     // Prompt the user for ID.
     cout << "\nCar ID's are 7 characters long,\n"
@@ -1062,16 +1062,18 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
             getline(cin, id);
         }
 
+        // Check if ID exists.
+        while (IDExists(recArr_in, arrSize, id))
+        {
+            cout << "\nThat ID is already in use." << endl;
+            cout << "\nEnter ID: ";
+            getline(cin, id);
+
+        }
+
     }
 
-    // Check if ID exists.
-    while (IDExists(recArr_in, arrSize, id))
-    {
-        cout << "\nThat ID is already in use." << endl;
-        cout << "\nEnter ID: ";
-        getline(cin, id);
-
-    }
+    
 
     return id;
 }

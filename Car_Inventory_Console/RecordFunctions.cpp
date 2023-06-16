@@ -1069,11 +1069,51 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
             cout << "\nEnter ID: ";
             getline(cin, id);
 
+            // Check if nothing is entered again.
+            while (id == "")
+            {
+                cout << "\nYou didn't enter anything!\n";
+                cout << "\nEnter ID: ";
+                getline(cin, id);
+            }
+
         }
 
     }
 
-    
+    // Check if ID exists.
+    while (IDExists(recArr_in, arrSize, id))
+    {
+        cout << "\nThat ID is already in use." << endl;
+        cout << "\nEnter ID: ";
+        getline(cin, id);
+
+        // Check if nothing is entered again.
+        while (id == "")
+        {
+            cout << "\nYou didn't enter anything!\n";
+            cout << "\nEnter ID: ";
+            getline(cin, id);
+        }
+
+        while (!IDValid(id, id_err))
+        {
+            cout << "\nID invalid...\n"
+                << "\n" << id_err << "\n";
+            cout << "\nEnter ID: ";
+            getline(cin, id);
+
+            // Check if nothing is entered again.
+            while (id == "")
+            {
+                cout << "\nYou didn't enter anything!\n";
+                cout << "\nEnter ID: ";
+                getline(cin, id);
+            }
+
+        }
+
+    }
 
     return id;
 }

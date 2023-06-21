@@ -907,7 +907,7 @@ void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
                 int& arrSize, int& arrSize_in, int& rawSize, int& errSize,
                 string& id_err, string& mod_err, string& quant_err, string& prc_err)
 {
-    //int ItemInput;   // user input for Item menu.
+    Record tempRec;
     ItemChoice ItemMenu = ItemChoice::INPUT_ITEM;
 
     do
@@ -920,10 +920,20 @@ void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
         switch (ItemMenu)
         {
         case ItemChoice::INPUT_ITEM:
-            inputArr_in.GetRecArr()[arrSize_in] = InputRecord(rawArr, rawSize, id_err,
-                       mod_err, quant_err, prc_err);
-            arrSize_in++;
-            break;
+            tempRec = InputRecord(rawArr, rawSize, id_err, mod_err, quant_err, prc_err);
+            if (tempRec.GetID() == "r" || tempRec.GetModel() == "r" || 
+                tempRec.GetQuantity() == 114 || tempRec.GetPrice() == 114.0)
+            {
+                cout << "\nAborted..." << endl;
+                break;
+            }
+            else
+            {
+                inputArr_in.GetRecArr()[arrSize_in] = tempRec;
+                arrSize_in++;
+                break;
+            }
+            
         case ItemChoice::EDIT_ITEM:
             EditRecord(recArr_in, pArr, inputArr_in, rawArr, errMsgs, arrSize, arrSize_in, rawSize,
                         errSize, id_err, mod_err, quant_err, prc_err);
@@ -1010,20 +1020,47 @@ void SortPrice(Record* ptrArr[], int& arrSize)
 Record InputRecord(RecordArray& recArr_in, int& arrSize, string& id_err,
                 string& mod_err, string& quant_err, string& prc_err)
 {
-    string id, mod, quant, prc;
+    string id = "", mod = "", quant = "", prc = "";
     Record tempRec; // Temporary Record.
 
     id = InputID(recArr_in, arrSize, id_err);
-    tempRec.SetID(id);
+    if (id == "r")
+    {
+        tempRec.SetID(id);
+        return tempRec;
+    }
+    else
+        tempRec.SetID(id);
 
     mod = InputModel(mod_err);
-    tempRec.SetModel(mod);
+    if (mod == "r")
+    {
+        tempRec.SetModel(mod);
+        return tempRec;
+    }
+    else    
+        tempRec.SetModel(mod);
 
     quant = InputQuantity(quant_err);
-    tempRec.SetQuantity(stoi(quant));
+    if (quant == "r")
+    {
+        int quantR = int(quant[0]);     // Convert string to int.
+        tempRec.SetQuantity(quantR);    // Set int to Record object.
+        return tempRec;
+    }
+    else    
+        tempRec.SetQuantity(stoi(quant));
  
     prc = InputPrice(prc_err);
-    tempRec.SetPrice(stof(prc));
+    if (prc == "r")
+    {
+        float prcR = float(prc[0]);
+        tempRec.SetPrice(prcR);
+        return tempRec;
+    }
+    else    
+        tempRec.SetPrice(stof(prc));
+
 
     return tempRec;
         
@@ -1036,8 +1073,11 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
     // Prompt the user for ID.
     cout << "\nCar ID's are 7 characters long,\n"
         << "The first 2 characters must be letters A - F.\n"
-        << "\nEnter a unique ID: ";
+        << "\nEnter a unique ID ( r to return to menu): ";
     getline(cin, id);
+
+    if (id == "r" || id == "R")
+        return id;
 
     // Check if nothing is entered.
     while (id == "")
@@ -1045,6 +1085,9 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
         cout << "\nYou didn't enter anything!\n";
         cout << "\nEnter ID: ";
         getline(cin, id);
+
+        if (id == "r" || id == "R")
+            return id;
     }
 
     while (!IDValid(id, id_err))
@@ -1054,12 +1097,18 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
         cout << "\nEnter ID: ";
         getline(cin, id);
 
+        if (id == "r" || id == "R")
+            return id;
+
         // Check if nothing is entered again.
         while (id == "")
         {
             cout << "\nYou didn't enter anything!\n";
             cout << "\nEnter ID: ";
             getline(cin, id);
+
+            if (id == "r" || id == "R")
+                return id;
         }
 
         // Check if ID exists.
@@ -1069,12 +1118,18 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
             cout << "\nEnter ID: ";
             getline(cin, id);
 
+            if (id == "r" || id == "R")
+                return id;
+
             // Check if nothing is entered again.
             while (id == "")
             {
                 cout << "\nYou didn't enter anything!\n";
                 cout << "\nEnter ID: ";
                 getline(cin, id);
+
+                if (id == "r" || id == "R")
+                    return id;
             }
 
         }
@@ -1088,12 +1143,18 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
         cout << "\nEnter ID: ";
         getline(cin, id);
 
+        if (id == "r" || id == "R")
+            return id;
+
         // Check if nothing is entered again.
         while (id == "")
         {
             cout << "\nYou didn't enter anything!\n";
             cout << "\nEnter ID: ";
             getline(cin, id);
+
+            if (id == "r" || id == "R")
+                return id;
         }
 
         while (!IDValid(id, id_err))
@@ -1103,12 +1164,18 @@ string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
             cout << "\nEnter ID: ";
             getline(cin, id);
 
+            if (id == "r" || id == "R")
+                return id;
+
             // Check if nothing is entered again.
             while (id == "")
             {
                 cout << "\nYou didn't enter anything!\n";
                 cout << "\nEnter ID: ";
                 getline(cin, id);
+
+                if (id == "r" || id == "R")
+                    return id;
             }
 
         }
@@ -1129,12 +1196,18 @@ string InputModel(string& mod_err)
         << "\nEnter Model: ";
     getline(cin, mod);
 
+    if (mod == "r" || mod == "R")
+        return mod;
+
     // Check if nothing is entered.
     while (mod == "")
     {
         cout << "\nYou didn't enter anything!\n";
         cout << "\nEnter Model: ";
         getline(cin, mod);
+
+        if (mod == "r" || mod == "R")
+            return mod;
     }
 
     while (!ModelValid(mod, mod_err))
@@ -1144,12 +1217,18 @@ string InputModel(string& mod_err)
         cout << "\nEnter Model: ";
         getline(cin, mod);
 
+        if (mod == "r" || mod == "R")
+            return mod;
+
         // Check if nothing is entered again.
         while (mod == "")
         {
             cout << "\nYou didn't enter anything!\n";
             cout << "\nEnter Model: ";
             getline(cin, mod);
+
+            if (mod == "r" || mod == "R")
+                return mod;
         }
     }
 
@@ -1164,12 +1243,18 @@ string InputQuantity(string& quant_err)
     cout << "\nEnter quantity of items: ";
     getline(cin, quant);
 
+    if (quant == "r" || quant == "R")
+        return quant;
+
     // Check if nothing is entered.
     while (quant == "")
     {
         cout << "\nYou didn't enter anything!\n";
         cout << "\nEnter Quantity: ";
         getline(cin, quant);
+
+        if (quant == "r" || quant == "R")
+            return quant;
     }
 
     while (!QuantityValid(quant, quant_err))
@@ -1179,12 +1264,18 @@ string InputQuantity(string& quant_err)
         cout << "\nEnter Quantity: ";
         getline(cin, quant);
 
+        if (quant == "r" || quant == "R")
+            return quant;
+
         // Check if nothing is entered again.
         while (quant == "")
         {
             cout << "\nYou didn't enter anything!\n";
             cout << "\nEnter Quantity: ";
             getline(cin, quant);
+
+            if (quant == "r" || quant == "R")
+                return quant;
         }
     }
 
@@ -1199,12 +1290,18 @@ string InputPrice(string& prc_err)
     cout << "\nEnter price of item: ";
     getline(cin, prc);
 
+    if (prc == "r" || prc == "R")
+        return prc;
+
     // Check if nothing is entered.
     while (prc == "")
     {
         cout << "\nYou didn't enter anything!\n";
         cout << "\nEnter Price: ";
         getline(cin, prc);
+
+        if (prc == "r" || prc == "R")
+            return prc;
     }
 
     while (!PriceValid(prc, prc_err))
@@ -1214,12 +1311,18 @@ string InputPrice(string& prc_err)
         cout << "\nEnter Price: ";
         getline(cin, prc);
 
+        if (prc == "r" || prc == "R")
+            return prc;
+
         // Check if nothing is entered again.
         while (prc == "")
         {
             cout << "\nYou didn't enter anything!\n";
             cout << "\nEnter Price: ";
             getline(cin, prc);
+
+            if (prc == "r" || prc == "R")
+                return prc;
         }
     }
 
@@ -1235,6 +1338,7 @@ void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
 
     string editID;  // Search ID to locate record.
     string recResp; //  User response to edit record.
+    string idEdit;
 
     cout << "\nEnter ID of record to edit: ";
     getline(cin, editID);
@@ -1286,7 +1390,14 @@ void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
                 switch (editMenu)
                 {
                 case EditChoice::EDIT_ID:
-                    tempRec.SetID(InputID(rawArr_in, rawSize, id_err));
+                    idEdit = InputID(rawArr_in, rawSize, id_err);
+                    if (idEdit == ToLower("r"))
+                        break;
+                    else
+                    {
+                        tempRec.SetID(idEdit);
+                        cout << "\nID successfully updated." << endl;
+                    }                       
                     break;
                 case EditChoice::EDIT_MODEL:
                     tempRec.SetModel(InputModel(mod_err));

@@ -1333,12 +1333,15 @@ void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
             int& arrSize, int& arrSize_in, int& rawSize, int& errSize, string& id_err, string& mod_err,
             string& quant_err, string& prc_err)
 {
-    string id, mod, quant, prc; // Store edited input.
-    Record tempRec; // Temporary Record.
+    string idEdit, modEdit, quantEdit, prcEdit; // Store edited input.
+    Record tempRec; // Temporary Record to hold the Record being edited.
+    Record tempRecEdit; // Temporary Record to hold edited changes to Record being edited.
 
     string editID;  // Search ID to locate record.
     string recResp; //  User response to edit record.
-    string idEdit;
+
+    int quantR;
+    float prcR;
 
     cout << "\nEnter ID of record to edit: ";
     getline(cin, editID);
@@ -1391,8 +1394,12 @@ void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
                 {
                 case EditChoice::EDIT_ID:
                     idEdit = InputID(rawArr_in, rawSize, id_err);
-                    if (idEdit == ToLower("r"))
+                    tempRecEdit.SetID(idEdit);
+                    if (tempRecEdit.GetID() == ToLower("r"))
+                    {
+                        cout << "\nAborted..." << endl;
                         break;
+                    }
                     else
                     {
                         tempRec.SetID(idEdit);
@@ -1400,13 +1407,49 @@ void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in
                     }                       
                     break;
                 case EditChoice::EDIT_MODEL:
-                    tempRec.SetModel(InputModel(mod_err));
+                    modEdit = InputModel(mod_err);
+                    tempRecEdit.SetModel(modEdit);
+                    if (tempRecEdit.GetModel() == ToLower("r"))
+                    {
+                        cout << "\nAborted..." << endl;
+                        break;
+                    }
+                    else
+                    {
+                        tempRec.SetModel(modEdit);
+                        cout << "\nModel successfully updated." << endl;
+                    }
+                    
                     break;
                 case EditChoice::EDIT_QUANTITY:
-                    tempRec.SetQuantity(stoi(InputQuantity(quant_err)));
+                    quantEdit = InputQuantity(quant_err);
+                    quantR = int(quantEdit[0]);     // Convert string to int.
+                    tempRecEdit.SetQuantity(quantR);    // Set int to Record object.
+                    if (tempRecEdit.GetQuantity() == 114)
+                    {
+                        cout << "\nAborted..." << endl;
+                        break;
+                    }
+                    else
+                    {
+                        tempRec.SetQuantity(quantR);
+                        cout << "\nQuantity successfully updated." << endl;
+                    }
                     break;
                 case EditChoice::EDIT_PRICE:
-                    tempRec.SetPrice(stof(InputPrice(prc_err)));
+                    prcEdit = InputPrice(prc_err);
+                    prcR = float(prcEdit[0]);     // Convert string to float.
+                    tempRecEdit.SetPrice(prcR);    // Set float to Record object.
+                    if (tempRecEdit.GetPrice() == 114.0)
+                    {
+                        cout << "\nAborted..." << endl;
+                        break;
+                    }
+                    else
+                    {
+                        tempRec.SetPrice(prcR);
+                        cout << "\nPrice successfully updated." << endl;
+                    }
                     break;
                 case EditChoice::EDIT_RECORD:
                     tempRec = InputRecord(rawArr_in, rawSize, id_err, mod_err, 

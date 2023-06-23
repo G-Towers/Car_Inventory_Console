@@ -1,4 +1,3 @@
-// #pragma once
 
 #ifndef RECORDARRAY_H
 #define RECORDARRAY_H

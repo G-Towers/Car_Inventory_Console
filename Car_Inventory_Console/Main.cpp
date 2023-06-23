@@ -1,5 +1,6 @@
 // Main.cpp Car Inventory
 
+#include "Interface.h"
 #include "RecordArray.h"
 #include "RecordFunctions.h"
 

@@ -20,12 +20,6 @@ const int MAX_PRICE_LENGTH = 10; // Maximum length for price.
 const int MIN_PRICE_LENGTH = 4; // Minimum length for price.
 const int MAX_ERR_MSG = 200;  // Maximum amount of error message strings.
 
-// Enumerations.
-enum class MainChoice { PRINT_ALL = 1, PRINT_INVALID = 2, SEARCH = 3, SORT = 4, MANAGE_ITEM = 5, QUIT = 6 };
-enum class SortChoice { SORT_ID = 1, SORT_MODEL = 2, SORT_QUANTITY = 3, SORT_PRICE = 4, PREVIOUS_MENU = 5 };
-enum class ItemChoice { INPUT_ITEM = 1, EDIT_ITEM = 2, DELETE_ITEM = 3, PRINT_ITEM = 4, SAVE_ITEM = 5, PREV_MENU = 6 };
-enum class EditChoice { EDIT_ID = 1, EDIT_MODEL = 2, EDIT_QUANTITY = 3, EDIT_PRICE = 4, EDIT_RECORD = 5, DISPLAY_RECORD = 6, SAVE_RECORD = 7, BACK_PREV = 8 };
-
 class Record
 {
 public:

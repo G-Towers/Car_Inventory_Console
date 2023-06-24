@@ -2,6 +2,7 @@
 
 #include "Interface.h"
 
+
 int MenuUserInput()
 {
     // For user input.
@@ -61,11 +62,21 @@ string YesNoUserInput()
     return stringInput;
 }
 
+void DisplayWelcomeMenu()
+{
+    cout << "\n-- Car Inventory Program --\n"
+        << "1. Array Implementation.\n"
+        << "2. Linked List Implementation.\n" 
+        << "3. Quit.\n" << endl;
+
+    cout << "\nEnter Mode of operation: ";
+}
+
 
 void DisplayMainMenu()
 {
     // Display main menu.
-    cout << "\n-- Car Inventory -- \n"
+    cout << "\n-- Home -- \n"
         << "\n1. Display Records on file.\n"
         << "2. Display Invalid Records.\n"
         << "3. Search Records.\n"
@@ -115,4 +126,77 @@ void DisplayEditItemMenu()
         << "7. Save Edited Record to File.\n"
         << "8. Back to Previous Menu.\n" << endl;
     cout << "\nEnter your selection: ";
+}
+
+void SwitchWelcomeMenu()
+{
+    WelcomeChoice welcomeMenu = WelcomeChoice::ARRAY_TYPE;  // Wecome menu enum.
+
+    do
+    {
+        DisplayMainMenu();  // Display the main menu.
+        int userInput = MenuUserInput();    // user input.
+        welcomeMenu = (WelcomeChoice)userInput; // cast to enum type.
+
+        switch (welcomeMenu)
+        {
+        case WelcomeChoice::ARRAY_TYPE:
+            //ReadFile(carRec, ptrRec, errorMsgs, count, errCount, idErrMsg,
+            //       mdlErrMsg, quantErrMsg, prcErrMsg);
+            //SwitchMainMenu();
+            break;
+        case WelcomeChoice::LIST_TYPE:
+            
+            break;
+        case WelcomeChoice::QUIT_WELCOME:
+            QuitMsg();
+            break;
+        default:
+            SelectionError();
+            break;
+        
+        }
+    } while (welcomeMenu != WelcomeChoice::QUIT_WELCOME);
+}
+
+void SwitchMainMenu(RecordArray& recArr, Record* pArr[], RecordArray& inArr, RecordArray& rawArr, int& size,
+    int& inSize, int& rawSize, string errMsgs[], int& errSize, string& id_err, string& mod_err, string& quant_err, 
+    string& prc_err)
+{
+    MainChoice mainMenu = MainChoice::PRINT_ALL;  // Menu enum
+
+    do
+    {
+        DisplayMainMenu();  // Display the main menu.
+        int userInput = MenuUserInput();    // user input.
+        mainMenu = (MainChoice)userInput; // cast to enum type.
+
+        switch (mainMenu)
+        {
+        case MainChoice::PRINT_ALL:
+            //ReadFile(carRec, ptrRec, errorMsgs, count, errCount, idErrMsg,
+            //       mdlErrMsg, quantErrMsg, prcErrMsg);
+            PrintAll(recArr, size);
+            break;
+        case MainChoice::PRINT_INVALID:
+            PrintInvalid(errSize);
+            break;
+        case MainChoice::SEARCH:
+            Search(recArr, size);
+            break;
+        case MainChoice::SORT:
+            SortWrpr(pArr, size);
+            break;
+        case MainChoice::MANAGE_ITEM:
+            ManageItem(recArr, pArr, inArr, rawArr, errMsgs, size, inSize,
+                rawSize, errSize, id_err, mod_err, quant_err, prc_err);
+            break;
+        case MainChoice::QUIT:
+            QuitMsg();
+            break;
+        default:
+            SelectionError();
+            break;
+        }
+    } while (mainMenu != MainChoice::QUIT);
 }

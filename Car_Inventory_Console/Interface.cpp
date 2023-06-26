@@ -65,7 +65,7 @@ string YesNoUserInput()
 void DisplayWelcomeMenu()
 {
     cout << "\n-- Car Inventory Program --\n"
-        << "1. Array Implementation.\n"
+        << "\n1. Array Implementation.\n"
         << "2. Linked List Implementation.\n" 
         << "3. Quit.\n" << endl;
 
@@ -76,13 +76,13 @@ void DisplayWelcomeMenu()
 void DisplayMainMenu()
 {
     // Display main menu.
-    cout << "\n-- Home -- \n"
+    cout << "\n-- Record Array implementation -- \n"
         << "\n1. Display Records on file.\n"
         << "2. Display Invalid Records.\n"
         << "3. Search Records.\n"
         << "4. Sort Records.\n"
         << "5. Manage Records.\n"
-        << "6. Quit\n" << endl;
+        << "6. Back to Implementation Selection.\n" << endl;
     cout << "\nEnter your selection: ";
 
 }
@@ -128,13 +128,15 @@ void DisplayEditItemMenu()
     cout << "\nEnter your selection: ";
 }
 
-void SwitchWelcomeMenu()
+void SwitchWelcomeMenu(RecordArray& recArr, Record* pArr[], RecordArray& inArr, RecordArray& rawArr, int& size,
+    int& inSize, int& rawSize, string errMsgs[], int& errSize, string& id_err, string& mod_err, string& quant_err,
+    string& prc_err)
 {
     WelcomeChoice welcomeMenu = WelcomeChoice::ARRAY_TYPE;  // Wecome menu enum.
 
     do
     {
-        DisplayMainMenu();  // Display the main menu.
+        DisplayWelcomeMenu();  // Display the main menu.
         int userInput = MenuUserInput();    // user input.
         welcomeMenu = (WelcomeChoice)userInput; // cast to enum type.
 
@@ -143,7 +145,9 @@ void SwitchWelcomeMenu()
         case WelcomeChoice::ARRAY_TYPE:
             //ReadFile(carRec, ptrRec, errorMsgs, count, errCount, idErrMsg,
             //       mdlErrMsg, quantErrMsg, prcErrMsg);
-            //SwitchMainMenu();
+            SwitchMainMenu(recArr, pArr, inArr, rawArr, size,
+                inSize, rawSize, errMsgs, errSize, id_err, mod_err, quant_err,
+                prc_err);
             break;
         case WelcomeChoice::LIST_TYPE:
             

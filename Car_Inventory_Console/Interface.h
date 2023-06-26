@@ -37,7 +37,9 @@ void DisplayEditItemMenu();
 // -- Switch Statement Functions --
 //
 
-void SwitchWelcomeMenu();
+void SwitchWelcomeMenu(RecordArray& recArr, Record* pArr[], RecordArray& inArr, RecordArray& rawArr, int& size,
+	int& inSize, int& rawSize, string errMsgs[], int& errSize, string& id_err, string& mod_err, string& quant_err,
+	string& prc_err);
 // Switch statements for Welcome Menu.
 
 void SwitchMainMenu(RecordArray& recArr, Record* pArr[], RecordArray& inArr, RecordArray& rawArr, int& size, 

@@ -7,7 +7,7 @@
 
 int main()
 {
-    int count = 0;  // Array size for carRec.
+    int carCount = 0;  // Array size for carRec.
     int rawCount = 0;   // Size for raw array.
     int errCount = 0;    // How many records with errors in file.
     int inputCount = 0; // Array size for inputRec.
@@ -29,13 +29,15 @@ int main()
     
 
     // Read and validate the inventory of automobiles from the file.
-    ReadFile(carRec, ptrRec, errorMsgs, count, errCount, idErrMsg,
+    ReadFile(carRec, ptrRec, errorMsgs, carCount, errCount, idErrMsg,
         mdlErrMsg, quantErrMsg, prcErrMsg);
 
     // Read everything into a separate array.
     RawReadFile(rawCarRec, rawCount);
 
-    DisplayWelcomeMenu();
+    SwitchWelcomeMenu(carRec, ptrRec, inputRec, rawCarRec, carCount,
+        inputCount, rawCount, errorMsgs, errCount, idErrMsg, mdlErrMsg, quantErrMsg,
+        prcErrMsg);
 
 
     // Pointer array to nullptr.

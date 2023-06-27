@@ -14,7 +14,8 @@
 using namespace std;
 
 // Global variables.
-const int MAX_SIZE = 50;    // Maximum size of objects in array(max items in record).
+const int MAX_SIZE = 100;    // Maximum size of objects in array(max items in record).
+const int MAX_INPUT_SIZE = 50;  // Maximum size of input array.
 const int MAX_ID_LENGTH = 7;    // Maximum length for ID number.
 const int MAX_PRICE_LENGTH = 10; // Maximum length for price.
 const int MIN_PRICE_LENGTH = 4; // Minimum length for price.

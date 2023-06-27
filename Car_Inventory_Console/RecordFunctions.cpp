@@ -7,7 +7,7 @@ void DisplayErrFile()
 {
     ifstream inputFile;
     string line;
-    int errSize = 0;
+    //int errSize = 0;
 
     // Open input file and test for failure.
     inputFile.open("errors.txt");
@@ -43,12 +43,10 @@ void DisplayErrFile()
 
 }
 
-void ReadFile(RecordArray& recArr_in, Record* pArr[], string errMsgs[], int& arrSize, int& errSize,
-    string& id_err, string& mod_err, string& quant_err, string& prc_err)
+void ReadFile(InvStorage& inv, ErrMsgs& err)
 {
-    // Initialize array sizes.
-    arrSize = 0;
-    errSize = 0;
+    // input file size.
+    int inputSize = 0;
 
     // Temporary string used for validation.
     string id = "",
@@ -69,64 +67,64 @@ void ReadFile(RecordArray& recArr_in, Record* pArr[], string errMsgs[], int& arr
     }
 
     // Get values from the input file, validate, and write to array.
-    while (arrSize < MAX_SIZE && !inputFile.eof())
+    while (inputSize < MAX_SIZE && !inputFile.eof())
     {
         // Read each line and assign to strings.
         inputFile >> id >> mod >> quant >> prc;
 
         // Validate and store valid data.
-        if (IDValid(id, id_err) && ModelValid(mod, mod_err) && QuantityValid(quant, quant_err) && PriceValid(prc, prc_err))
+        if (IDValid(id, err) && ModelValid(mod, err) && QuantityValid(quant, err) && PriceValid(prc, err))
         {
             // Write entries to record array.
-            recArr_in.GetRecArr()[arrSize].SetID(ToUpper(id));
-            recArr_in.GetRecArr()[arrSize].SetModel(ToUpper(mod));
-            recArr_in.GetRecArr()[arrSize].SetQuantity(stoi(quant));
-            recArr_in.GetRecArr()[arrSize].SetPrice(stof(prc));
+            inv.carRec[inv.carCount].SetID(ToUpper(id));
+            inv.carRec[inv.carCount].SetModel(ToUpper(mod));
+            inv.carRec[inv.carCount].SetQuantity(stoi(quant));
+            inv.carRec[inv.carCount].SetPrice(stof(prc));
 
             // Assign pointers.
-            pArr[arrSize] = &recArr_in.GetRecArr()[arrSize];
+            inv.ptrRec[inv.carCount] = &inv.carRec[inv.carCount];
 
-            arrSize++;  // Increment the size of the array.
+            inv.carCount++;  // Increment the size of the car array (valid records).
         }
-
 
         else
         {
             // For invalid records, store appropriate error messages in error array.
-            errMsgs[errSize] = id + " " + mod + " " + quant + " " + prc + "\n";
+            err.errorMsgs[err.errCount] = id + " " + mod + " " + quant + " " + prc + "\n";
 
-            if (!IDValid(id, id_err))
+            if (!IDValid(id, err))
             {
-                errMsgs[errSize] += id_err;
-
+                err.errorMsgs[err.errCount] += err.idErrMsg;
             }
 
-            if (!ModelValid(mod, mod_err))
+            if (!ModelValid(mod, err))
             {
-                errMsgs[errSize] += mod_err;
+                err.errorMsgs[err.errCount] += err.mdlErrMsg;
             }
 
-            if (!QuantityValid(quant, quant_err))
+            if (!QuantityValid(quant, err))
             {
-                errMsgs[errSize] += quant_err;
+                err.errorMsgs[err.errCount] += err.quantErrMsg;
             }
 
-            if (!PriceValid(prc, prc_err))
+            if (!PriceValid(prc, err))
             {
-                errMsgs[errSize] += prc_err;
+                err.errorMsgs[err.errCount] += err.prcErrMsg;
             }
 
-            errSize++;  // Count for records with errors.
+            err.errCount++;  // Count for records with errors.
 
         }
+
+        inputSize++;    // Increment the input size.
 
     }
 
     // Write to error file.
-    WriteErrorFile(errMsgs, errSize);
+    WriteErrorFile(err);
 
-    // Check if empty.
-    if (arrSize == 0)
+    // Check if input file is empty.
+    if (inputSize == 0)
     {
         cout << "The input file is empty. Quitting program!" << endl;
         system("pause");
@@ -134,8 +132,8 @@ void ReadFile(RecordArray& recArr_in, Record* pArr[], string errMsgs[], int& arr
 
     }
 
-    // Check to see if size of array is maxed out.
-    if (arrSize == MAX_SIZE && !inputFile.eof())
+    // Check to see if size of car array is maxed out.
+    if (inv.carCount == MAX_SIZE && !inputFile.eof())
     {
         cout << "\nThe Maximum number of entries have been stored.\n"
             << "Only the first " << MAX_SIZE << " entries can be processed." << endl;
@@ -148,10 +146,10 @@ void ReadFile(RecordArray& recArr_in, Record* pArr[], string errMsgs[], int& arr
 
 }
 
-void RawReadFile(RecordArray& recArr_in, int& arrSize)
+void RawReadFile(InvStorage& inv)
 {
-    // Initialize array sizes.
-    arrSize = 0;
+    // input file size.
+    int inputSize = 0;
 
     // Temporary strings.
     string id = "",
@@ -172,23 +170,25 @@ void RawReadFile(RecordArray& recArr_in, int& arrSize)
     }
 
     // Get values from the input file and write to array.
-    while (arrSize < MAX_SIZE && !inputFile.eof())
+    while (inputSize < MAX_SIZE && !inputFile.eof())
     {
         // Read each line and assign to strings.
         inputFile >> id >> mod >> quant >> prc;
 
-        // Write entries to record array.
-        recArr_in.GetRecArr()[arrSize].SetID(id);
-        recArr_in.GetRecArr()[arrSize].SetModel(mod);
-        recArr_in.GetRecArr()[arrSize].SetQuantity(stoi(quant));
-        recArr_in.GetRecArr()[arrSize].SetPrice(stof(prc));
+        // Write entries to raw record array.
+        inv.rawCarRec[inv.rawCount].SetID(id);
+        inv.rawCarRec[inv.rawCount].SetModel(mod);
+        inv.rawCarRec[inv.rawCount].SetQuantity(stoi(quant));
+        inv.rawCarRec[inv.rawCount].SetPrice(stof(prc));
 
-        arrSize++;  // Increment the size of the array.
+        inv.rawCount++;  // Increment the size of the raw array.
 
     }
 
-    // Check if empty.
-    if (arrSize == 0)
+    inputSize++;    // Increment the input size.
+
+    // Check if input file is empty.
+    if (inputSize == 0)
     {
         cout << "The input file is empty. Quitting program!" << endl;
         system("pause");
@@ -197,7 +197,7 @@ void RawReadFile(RecordArray& recArr_in, int& arrSize)
     }
 
     // Check to see if size of array is maxed out.
-    if (arrSize == MAX_SIZE && !inputFile.eof())
+    if (inv.rawCount == MAX_SIZE && !inputFile.eof())
     {
         cout << "\nThe Maximum number of entries have been stored.\n"
             << "Only the first " << MAX_SIZE << " entries can be processed." << endl;
@@ -210,7 +210,7 @@ void RawReadFile(RecordArray& recArr_in, int& arrSize)
 
 }
 
-void WriteErrorFile(string errMsgs[], const int& errSize)
+void WriteErrorFile(ErrMsgs& err)
 {
     // Declare output stream.
     ofstream errorFile;
@@ -226,11 +226,11 @@ void WriteErrorFile(string errMsgs[], const int& errSize)
     }
 
     // write to error file.
-    errorFile << errMsgs[0];
+    errorFile << err.errorMsgs[0];
 
-    for (int i = 1; i < errSize; i++)
+    for (int i = 1; i < err.errCount; i++)
     {
-        errorFile << "\n" << errMsgs[i];
+        errorFile << "\n" << err.errorMsgs[i];
     }
 
     // Close the error file.
@@ -238,7 +238,7 @@ void WriteErrorFile(string errMsgs[], const int& errSize)
 
 }
 
-void WriteFile(RecordArray& recArr_in, const int& arrSize)
+void WriteFile(InvStorage& inv)
 {
 
     // Declare file stream.
@@ -261,20 +261,20 @@ void WriteFile(RecordArray& recArr_in, const int& arrSize)
     outputFile.precision(2);
 
     // Write to the file.
-    for (int i = 0; i < arrSize - 1; i++)
+    for (int i = 0; i < inv.rawCount - 1; i++)
     {
-        outputFile << recArr_in.GetRecArr()[i].GetID() << " " << recArr_in.GetRecArr()[i].GetModel() << " " << recArr_in.GetRecArr()[i].GetQuantity()
-            << " " << recArr_in.GetRecArr()[i].GetPrice() << endl;
+        outputFile << inv.rawCarRec[i].GetID() << " " << inv.rawCarRec[i].GetModel() << " " << inv.rawCarRec[i].GetQuantity()
+            << " " << inv.rawCarRec[i].GetPrice() << endl;
     }
-    outputFile << recArr_in.GetRecArr()[arrSize - 1].GetID() << " " << recArr_in.GetRecArr()[arrSize - 1].GetModel() << " " << recArr_in.GetRecArr()[arrSize - 1].GetQuantity()
-        << " " << recArr_in.GetRecArr()[arrSize - 1].GetPrice();
+    outputFile << inv.rawCarRec[inv.rawCount - 1].GetID() << " " << inv.rawCarRec[inv.rawCount - 1].GetModel() << " " << inv.rawCarRec[inv.rawCount - 1].GetQuantity()
+        << " " << inv.rawCarRec[inv.rawCount - 1].GetPrice();
 
     // Close the file.
     outputFile.close();
 
 }
 
-void WriteAppendFile(RecordArray& recArr_in, const int& arrSize)
+void WriteAppendFile(InvStorage& inv)
 {
 
     // Declare file stream.
@@ -302,10 +302,10 @@ void WriteAppendFile(RecordArray& recArr_in, const int& arrSize)
     outputFile.precision(2);
 
     // Write to the file.
-    for (int i = 0; i < arrSize; i++)
+    for (int i = 0; i < inv.inputCount; i++)
     {
-        outputFile << "\n" << recArr_in.GetRecArr()[i].GetID() << " " << recArr_in.GetRecArr()[i].GetModel() << " " << recArr_in.GetRecArr()[i].GetQuantity()
-            << " " << recArr_in.GetRecArr()[i].GetPrice();
+        outputFile << "\n" << inv.inputRec[i].GetID() << " " << inv.inputRec[i].GetModel() << " " << inv.inputRec[i].GetQuantity()
+            << " " << inv.inputRec[i].GetPrice();
     }
 
     // Close the file.
@@ -313,15 +313,14 @@ void WriteAppendFile(RecordArray& recArr_in, const int& arrSize)
 
 }
 
-bool IDValid(string id, string& err)
+bool IDValid(string id, ErrMsgs& err)
 {
     bool valid = true;
-    err = "";   // Initialize the error message.
-
+    
     // Check ID length.
     if (id.length() < MAX_ID_LENGTH || id.length() > MAX_ID_LENGTH)
     {
-        err += " -- ID must be 7 characters long.\n";
+        err.idErrMsg += " -- ID must be 7 characters long.\n";
 
         return false;
     }
@@ -331,7 +330,7 @@ bool IDValid(string id, string& err)
     {
         if (!isalnum(id.at(i)))
         {
-            err = " -- ID must contain only alpha-numeric characters.\n";
+            err.idErrMsg = " -- ID must contain only alpha-numeric characters.\n";
             valid = false;
 
         }
@@ -340,14 +339,14 @@ bool IDValid(string id, string& err)
     // Check ID at index 0 and index 1 if alphabetical.
     if (!isalpha(id.at(0)) || !isalpha(id.at(1)))
     {
-        err += " -- First 2 characters in ID must be alpha characters.\n";
+        err.idErrMsg += " -- First 2 characters in ID must be alpha characters.\n";
         valid = false;
     }
 
     // Check ID at index 0 and index 1 if letters A - F.
     if ((ToUpper(id).at(0) > 'F' || ToUpper(id).at(0) < 'A') || (ToUpper(id).at(1) > 'F' || ToUpper(id).at(1) < 'A'))
     {
-        err += " -- First 2 characters in ID must be letters A - F.\n";
+        err.idErrMsg += " -- First 2 characters in ID must be letters A - F.\n";
         valid = false;
     }
 
@@ -355,17 +354,16 @@ bool IDValid(string id, string& err)
     return valid;
 }
 
-bool ModelValid(string mod, string& err)
+bool ModelValid(string mod, ErrMsgs& err)
 {
     bool valid = true;
-    err = "";
 
     // Check model if alpha-numeric or underscore(_).
     for (size_t i = 0; i < mod.length(); i++)
     {
         if (!isalnum(mod.at(i)) && (mod.at(i) != '_'))
         {
-            err = " -- Model must contain only alpha-numeric or underscore characters.\n";
+            err.mdlErrMsg = " -- Model must contain only alpha-numeric or underscore characters.\n";
             valid = false;
 
         }
@@ -374,25 +372,24 @@ bool ModelValid(string mod, string& err)
     // Check model at index 0 if alphabetical.
     if (!isalpha(mod.at(0)))
     {
-        err += " -- The first character in model must be an alpha character.\n";
+        err.mdlErrMsg += " -- The first character in model must be an alpha character.\n";
         valid = false;
     }
 
     return valid;
 }
 
-bool QuantityValid(string quant, string& err)
+bool QuantityValid(string quant, ErrMsgs& err)
 {
     int quantity = 0;
     bool valid = true;
-    err = "";
 
     // Check quantity is a number.
     for (size_t i = 0; i < quant.length(); i++)
     {
         if (!isdigit(quant.at(i)) && quant.at(i) != '-')
         {
-            err = " -- Quantity must contain only numbers.\n";
+            err.quantErrMsg = " -- Quantity must contain only numbers.\n";
             valid = false;
 
         }
@@ -407,7 +404,7 @@ bool QuantityValid(string quant, string& err)
         // Check if quantity is less than 0.
         if (quantity < 0)
         {
-            err += " -- Quantity must be a positve number or 0.\n";
+            err.quantErrMsg += " -- Quantity must be a positve number or 0.\n";
             valid = false;
 
         }
@@ -417,15 +414,14 @@ bool QuantityValid(string quant, string& err)
 
 }
 
-bool PriceValid(string prc, string& err)
+bool PriceValid(string prc, ErrMsgs& err)
 {
     bool valid = true;
-    err = "";
 
     // Check price length.
     if (prc.length() < MIN_PRICE_LENGTH || prc.length() > MAX_PRICE_LENGTH)
     {
-        err = " -- Price must be at least 4 characters,\n"
+        err.prcErrMsg = " -- Price must be at least 4 characters,\n"
               "    and not more than 10 characters long.\n";
 
         return false;
@@ -436,7 +432,7 @@ bool PriceValid(string prc, string& err)
     {
         if (!isdigit(prc.at(i)) && (prc.at(i) != '.') && (prc.at(i) != '-'))
         {
-            err += " -- Price must be a number.\n";
+            err.prcErrMsg += " -- Price must be a number.\n";
             valid = false;
 
 
@@ -447,7 +443,7 @@ bool PriceValid(string prc, string& err)
     // Check if decimal is in the correct place.
     if (prc[prc.length() - 3] != '.')
     {
-        err += " -- Price must be expressed as a decimal number.\n";
+        err.prcErrMsg += " -- Price must be expressed as a decimal number.\n";
         valid = false;
     }
         
@@ -456,7 +452,7 @@ bool PriceValid(string prc, string& err)
         // Check if price is greater than 0. 
         if (stof(prc) < 1)
         {
-            err += " -- Price must be greater than 0.\n";
+            err.prcErrMsg += " -- Price must be greater than 0.\n";
 
             valid = false;
         }
@@ -467,15 +463,15 @@ bool PriceValid(string prc, string& err)
 
 }
 
-void Print(const RecordArray& recArr_in, const int& arrSize)
+void Print(const InvStorage& inv)
 {
 
-    cout << "Valid records: " << arrSize << '\n' << endl;
+    cout << "Valid records: " << inv.carCount << '\n' << endl;
 
     cout << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
         << "--------------------------------------------------------------------------------------------------------------" << endl;
 
-    if (arrSize == 0)
+    if (inv.carCount == 0)
     {
         cout << "\nNo records to display." << endl;
     }
@@ -483,15 +479,15 @@ void Print(const RecordArray& recArr_in, const int& arrSize)
     else
     {
         // Print the array.
-        for (int i = 0; i < arrSize; i++)
+        for (int i = 0; i < inv.carCount; i++)
         {
-            cout << ToString(recArr_in.GetRecArr()[i]) << endl;
+            cout << ToString(inv.carRec[i]) << endl;
         }
     }
 
 }
 
-void PrintRecord(Record rec)
+void PrintRecord(Record& rec)
 {
     cout << "\n" << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
         << "--------------------------------------------------------------------------------------------------------------" << endl;
@@ -552,7 +548,7 @@ string ToUpper(string target)
     return tempString;
 }
 
-void SearchRec(const RecordArray& recArr_in, Record searchArr[], const int& arrSize, int& searchSize, string target)
+void SearchRec(const InvStorage& inv, Record searchArr[], int& searchSize, string target)
 {
 
     string tempTarget = ToLower(target);    // Temporary target to lowercase string.
@@ -567,11 +563,11 @@ void SearchRec(const RecordArray& recArr_in, Record searchArr[], const int& arrS
 
 
     // Iterate through the records.
-    for (int i = 0; i < arrSize; i++)
+    for (int i = 0; i < inv.carCount; i++)
     {
         // Temporary lowercase strings for ID and model.
-        string tempID = ToLower(recArr_in.GetRecArr()[i].GetID());
-        string tempModel = ToLower(recArr_in.GetRecArr()[i].GetModel());
+        string tempID = ToLower(inv.carRec[i].GetID());
+        string tempModel = ToLower(inv.carRec[i].GetModel());
 
 
         // Search string tempID, char_arr is the target, start at index 0, search 3 chars.
@@ -581,7 +577,7 @@ void SearchRec(const RecordArray& recArr_in, Record searchArr[], const int& arrS
         // Compare records (linear search).
         if ((tempTarget == tempID || tempTarget == tempModel))
         {
-            linearSrch[linearSize] = recArr_in.GetRecArr()[i];
+            linearSrch[linearSize] = inv.carRec[i];
             linearSize++;
 
         }
@@ -589,7 +585,7 @@ void SearchRec(const RecordArray& recArr_in, Record searchArr[], const int& arrS
         // Partial search.
         else if ((idFound != string::npos || modelFound != string::npos))
         {
-            partialSrch[partialSize] = recArr_in.GetRecArr()[i];
+            partialSrch[partialSize] = inv.carRec[i];
             partialSize++;
         }
 
@@ -617,22 +613,22 @@ void SearchRec(const RecordArray& recArr_in, Record searchArr[], const int& arrS
 
 }
 
-int SearchID(const RecordArray& recArr_in, const int& arrSize, string target)
+int SearchID(const InvStorage& inv, string target)
 {
     int index = 0;  // Index of array for linear search.
     string tempTarget = ToLower(target);    // Temporary target to lowercase string.
     Record linearSrch[MAX_SIZE]; // Array for items found from linear search.
 
     // Iterate through the records.
-    for (int i = 0; i < arrSize; i++)
+    for (int i = 0; i < inv.carCount; i++)
     {
         // Temporary lowercase strings for ID.
-        string tempID = ToLower(recArr_in.GetRecArr()[i].GetID());
+        string tempID = ToLower(inv.carRec[i].GetID());
 
         // Compare records (linear search).
         if (tempTarget == tempID)
         {
-            linearSrch[index] = recArr_in.GetRecArr()[i];
+            linearSrch[index] = inv.carRec[i];
 
             return index;
         }
@@ -644,11 +640,11 @@ int SearchID(const RecordArray& recArr_in, const int& arrSize, string target)
     return -1;
 }
 
-bool IDExists(const RecordArray& recArr_in, const int& arrSize, string id)
+bool IDExists(const InvStorage& inv, string id)
 {
-    for (size_t i = 0; i < arrSize; i++)
+    for (size_t i = 0; i < inv.carCount; i++)
     {
-        if (ToLower(id) == ToLower(recArr_in.GetRecArr()[i].GetID()))
+        if (ToLower(id) == ToLower(inv.carRec->GetID()))
         {
             return true;
         }
@@ -702,40 +698,6 @@ void BubbleSort(Record* pArr[], int size, bool(*cmp)(const Record*, const Record
     }
 }
 
-void SortWrpr(Record* ptrRec[], int& arrSize)
-{
-    SortChoice sortMenu = SortChoice::SORT_ID;
-
-    do
-    {
-        DisplaySortMenu();
-        int userInput = MenuUserInput();    // user input.
-        sortMenu = (SortChoice)userInput; // cast to enum type.
-
-        switch (sortMenu)
-        {
-        case SortChoice::SORT_ID:
-            SortID(ptrRec, arrSize);
-            break;
-        case SortChoice::SORT_MODEL:
-            SortModel(ptrRec, arrSize);
-            break;
-        case SortChoice::SORT_QUANTITY:
-            SortQuantity(ptrRec, arrSize);
-            break;
-        case SortChoice::SORT_PRICE:
-            SortPrice(ptrRec, arrSize);
-            break;
-        case SortChoice::PREVIOUS_MENU:
-            break;
-        default:
-            SelectionError();
-            break;
-        }
-    } while (sortMenu != SortChoice::PREVIOUS_MENU);
-
-}
-
 void PrintSorted(Record* arr[], const int arrSize)
 {
     // Set the decimal point.
@@ -759,10 +721,10 @@ void PrintSorted(Record* arr[], const int arrSize)
     }
 }
 
-void PrintAll(const RecordArray& recArr_in, int& arrSize)
+void PrintAll(const InvStorage& inv)
 {
     cout << "\nDisplay All Records --\n" << endl;
-    Print(recArr_in, arrSize); // Print the records.
+    Print(inv); // Print the records.
 }
 
 void PrintInvalid(int& err)
@@ -772,7 +734,7 @@ void PrintInvalid(int& err)
     DisplayErrFile();
 }
 
-void Search(const RecordArray& recArr_in, const int& sizeUsed)
+void Search(const InvStorage& inv)
 {
     int searchCount = 0;    // Search object array size.
     string searchStr;   // User search.
@@ -783,674 +745,15 @@ void Search(const RecordArray& recArr_in, const int& sizeUsed)
     getline(cin, searchStr);
     cout << endl;
 
-    SearchRec(recArr_in, searchRec, sizeUsed, searchCount, searchStr);
+    SearchRec(inv, searchRec, searchCount, searchStr);
     PrintSearchResults(searchRec, searchCount);
 
     searchCount = 0;    // Reset the search array.
 }
 
-void ManageItem(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in, RecordArray& rawArr, string errMsgs[],
-                int& arrSize, int& arrSize_in, int& rawSize, int& errSize,
-                string& id_err, string& mod_err, string& quant_err, string& prc_err)
-{
-    Record tempRec;
-    ItemChoice ItemMenu = ItemChoice::INPUT_ITEM;
 
-    do
-    {
-        DisplayItemMenu();
-        int userInput = MenuUserInput();
 
-        ItemMenu = (ItemChoice)userInput; // cast to enum type.
 
-        switch (ItemMenu)
-        {
-        case ItemChoice::INPUT_ITEM:
-            tempRec = InputRecord(rawArr, rawSize, id_err, mod_err, quant_err, prc_err);
-            if (tempRec.GetID() == "r" || tempRec.GetModel() == "r" || 
-                tempRec.GetQuantity() == 114 || tempRec.GetPrice() == 114.0)
-            {
-                cout << "\nAborted..." << endl;
-                break;
-            }
-            else
-            {
-                inputArr_in.GetRecArr()[arrSize_in] = tempRec;
-                arrSize_in++;
-                break;
-            }
-            
-        case ItemChoice::EDIT_ITEM:
-            EditRecord(recArr_in, pArr, inputArr_in, rawArr, errMsgs, arrSize, arrSize_in, rawSize,
-                        errSize, id_err, mod_err, quant_err, prc_err);
-            break;
-        case ItemChoice::DELETE_ITEM:
-            DeleteRecord(rawArr, rawSize, id_err);
-            ReadFile(recArr_in, pArr, errMsgs, arrSize, errSize, id_err,
-                    mod_err, quant_err, prc_err);
-            break;
-        case ItemChoice::PRINT_ITEM:
-            PrintRecord(inputArr_in, arrSize_in);
-            break;
-        case ItemChoice::SAVE_ITEM:
-            SaveRecord(inputArr_in, arrSize_in);
-            inputArr_in.ResetRecArr();
-            arrSize_in = 0;
-            ReadFile(recArr_in, pArr, errMsgs, arrSize, errSize, id_err,
-                mod_err, quant_err, prc_err);
-            break;
-        case ItemChoice::PREV_MENU:
-            break;
-        default:
-            SelectionError();
-            break;
-        }
-    } while (ItemMenu != ItemChoice::PREV_MENU);
 
-}
 
-void QuitMsg()
-{
-    cout << "\nThank you for your time." << endl;
-}
 
-void SelectionError()
-{
-    cout << "\nError! Your selection is invalid." << endl;
-    //cin.clear();
-    //cin.ignore(numeric_limits<streamsize>::max(), '\n');
-}
-
-void SortID(Record* ptrArr[], int& arrSize)
-{
-    cout << "\nSort by ID number --\n" << endl;
-
-    // Bubble sort using lambda expression.
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return ToLower(r1->GetID()) > ToLower(r2->GetID()); });
-
-    PrintSorted(ptrArr, arrSize);
-}
-
-void SortModel(Record* ptrArr[], int& arrSize)
-{
-    cout << "\nSort by model --\n" << endl;
-
-
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return ToLower(r1->GetModel()) > ToLower(r2->GetModel()); });
-
-    PrintSorted(ptrArr, arrSize);
-}
-
-void SortQuantity(Record* ptrArr[], int& arrSize)
-{
-    cout << "\nSort by quantity --\n" << endl;
-
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return r1->GetQuantity() > r2->GetQuantity(); });
-
-    PrintSorted(ptrArr, arrSize);
-}
-
-void SortPrice(Record* ptrArr[], int& arrSize)
-{
-    cout << "\nSort by price --\n" << endl;
-
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return r1->GetPrice() > r2->GetPrice(); });
-
-    PrintSorted(ptrArr, arrSize);
-}
-
-Record InputRecord(RecordArray& recArr_in, int& arrSize, string& id_err,
-                string& mod_err, string& quant_err, string& prc_err)
-{
-    string id = "", mod = "", quant = "", prc = "";
-    Record tempRec; // Temporary Record.
-
-    id = InputID(recArr_in, arrSize, id_err);
-    if (id == "r")
-    {
-        tempRec.SetID(id);
-        return tempRec;
-    }
-    else
-        tempRec.SetID(id);
-
-    mod = InputModel(mod_err);
-    if (mod == "r")
-    {
-        tempRec.SetModel(mod);
-        return tempRec;
-    }
-    else    
-        tempRec.SetModel(mod);
-
-    quant = InputQuantity(quant_err);
-    if (quant == "r")
-    {
-        int quantR = int(quant[0]);     // Convert string to int.
-        tempRec.SetQuantity(quantR);    // Set int to Record object.
-        return tempRec;
-    }
-    else    
-        tempRec.SetQuantity(stoi(quant));
- 
-    prc = InputPrice(prc_err);
-    if (prc == "r")
-    {
-        float prcR = float(prc[0]);
-        tempRec.SetPrice(prcR);
-        return tempRec;
-    }
-    else    
-        tempRec.SetPrice(stof(prc));
-
-
-    return tempRec;
-        
-}
-
-string InputID(RecordArray& recArr_in, int& arrSize, string& id_err)
-{
-    string id = "";
-
-    // Prompt the user for ID.
-    cout << "\nCar ID's are 7 characters long,\n"
-        << "The first 2 characters must be letters A - F.\n"
-        << "\nEnter a unique ID ( r to return to menu): ";
-    getline(cin, id);
-
-    if (id == "r" || id == "R")
-        return id;
-
-    // Check if nothing is entered.
-    while (id == "")
-    {
-        cout << "\nYou didn't enter anything!\n";
-        cout << "\nEnter ID: ";
-        getline(cin, id);
-
-        if (id == "r" || id == "R")
-            return id;
-    }
-
-    while (!IDValid(id, id_err))
-    {
-        cout << "\nID invalid...\n"
-            << "\n" << id_err << "\n";
-        cout << "\nEnter ID: ";
-        getline(cin, id);
-
-        if (id == "r" || id == "R")
-            return id;
-
-        // Check if nothing is entered again.
-        while (id == "")
-        {
-            cout << "\nYou didn't enter anything!\n";
-            cout << "\nEnter ID: ";
-            getline(cin, id);
-
-            if (id == "r" || id == "R")
-                return id;
-        }
-
-        // Check if ID exists.
-        while (IDExists(recArr_in, arrSize, id))
-        {
-            cout << "\nThat ID is already in use." << endl;
-            cout << "\nEnter ID: ";
-            getline(cin, id);
-
-            if (id == "r" || id == "R")
-                return id;
-
-            // Check if nothing is entered again.
-            while (id == "")
-            {
-                cout << "\nYou didn't enter anything!\n";
-                cout << "\nEnter ID: ";
-                getline(cin, id);
-
-                if (id == "r" || id == "R")
-                    return id;
-            }
-
-        }
-
-    }
-
-    // Check if ID exists.
-    while (IDExists(recArr_in, arrSize, id))
-    {
-        cout << "\nThat ID is already in use." << endl;
-        cout << "\nEnter ID: ";
-        getline(cin, id);
-
-        if (id == "r" || id == "R")
-            return id;
-
-        // Check if nothing is entered again.
-        while (id == "")
-        {
-            cout << "\nYou didn't enter anything!\n";
-            cout << "\nEnter ID: ";
-            getline(cin, id);
-
-            if (id == "r" || id == "R")
-                return id;
-        }
-
-        while (!IDValid(id, id_err))
-        {
-            cout << "\nID invalid...\n"
-                << "\n" << id_err << "\n";
-            cout << "\nEnter ID: ";
-            getline(cin, id);
-
-            if (id == "r" || id == "R")
-                return id;
-
-            // Check if nothing is entered again.
-            while (id == "")
-            {
-                cout << "\nYou didn't enter anything!\n";
-                cout << "\nEnter ID: ";
-                getline(cin, id);
-
-                if (id == "r" || id == "R")
-                    return id;
-            }
-
-        }
-
-    }
-
-    return id;
-}
-
-string InputModel(string& mod_err)
-{
-    string mod;
-
-    // Prompt the user for Model.
-    cout << "\nModel Names must be alpha-numeric and may contain underscores ( _ ),\n"
-        << "However, the model name must start with an alpha character and cannot\n"
-        << "have blank spaces.\n"
-        << "\nEnter Model: ";
-    getline(cin, mod);
-
-    if (mod == "r" || mod == "R")
-        return mod;
-
-    // Check if nothing is entered.
-    while (mod == "")
-    {
-        cout << "\nYou didn't enter anything!\n";
-        cout << "\nEnter Model: ";
-        getline(cin, mod);
-
-        if (mod == "r" || mod == "R")
-            return mod;
-    }
-
-    while (!ModelValid(mod, mod_err))
-    {
-        cout << "\nModel invalid...\n"
-            << "\n" << mod_err << "\n";
-        cout << "\nEnter Model: ";
-        getline(cin, mod);
-
-        if (mod == "r" || mod == "R")
-            return mod;
-
-        // Check if nothing is entered again.
-        while (mod == "")
-        {
-            cout << "\nYou didn't enter anything!\n";
-            cout << "\nEnter Model: ";
-            getline(cin, mod);
-
-            if (mod == "r" || mod == "R")
-                return mod;
-        }
-    }
-
-    return mod;
-}
-
-string InputQuantity(string& quant_err)
-{
-    string quant;
-
-    // Prompt user for quantity.
-    cout << "\nEnter quantity of items: ";
-    getline(cin, quant);
-
-    if (quant == "r" || quant == "R")
-        return quant;
-
-    // Check if nothing is entered.
-    while (quant == "")
-    {
-        cout << "\nYou didn't enter anything!\n";
-        cout << "\nEnter Quantity: ";
-        getline(cin, quant);
-
-        if (quant == "r" || quant == "R")
-            return quant;
-    }
-
-    while (!QuantityValid(quant, quant_err))
-    {
-        cout << "\nQuantity invalid...\n"
-            << "\n" << quant_err << "\n";
-        cout << "\nEnter Quantity: ";
-        getline(cin, quant);
-
-        if (quant == "r" || quant == "R")
-            return quant;
-
-        // Check if nothing is entered again.
-        while (quant == "")
-        {
-            cout << "\nYou didn't enter anything!\n";
-            cout << "\nEnter Quantity: ";
-            getline(cin, quant);
-
-            if (quant == "r" || quant == "R")
-                return quant;
-        }
-    }
-
-    return quant;
-}
-
-string InputPrice(string& prc_err)
-{
-    string prc;
-
-    // Prompt user for price.
-    cout << "\nEnter price of item: ";
-    getline(cin, prc);
-
-    if (prc == "r" || prc == "R")
-        return prc;
-
-    // Check if nothing is entered.
-    while (prc == "")
-    {
-        cout << "\nYou didn't enter anything!\n";
-        cout << "\nEnter Price: ";
-        getline(cin, prc);
-
-        if (prc == "r" || prc == "R")
-            return prc;
-    }
-
-    while (!PriceValid(prc, prc_err))
-    {
-        cout << "\nPrice invalid...\n"
-            << "\n" << prc_err << "\n";
-        cout << "\nEnter Price: ";
-        getline(cin, prc);
-
-        if (prc == "r" || prc == "R")
-            return prc;
-
-        // Check if nothing is entered again.
-        while (prc == "")
-        {
-            cout << "\nYou didn't enter anything!\n";
-            cout << "\nEnter Price: ";
-            getline(cin, prc);
-
-            if (prc == "r" || prc == "R")
-                return prc;
-        }
-    }
-
-    return prc;
-}
-
-void EditRecord(RecordArray& recArr_in, Record* pArr[], RecordArray& inputArr_in, RecordArray& rawArr_in, string errMsgs[],
-            int& arrSize, int& arrSize_in, int& rawSize, int& errSize, string& id_err, string& mod_err,
-            string& quant_err, string& prc_err)
-{
-    string idEdit, modEdit, quantEdit, prcEdit; // Store edited input.
-    Record tempRec; // Temporary Record to hold the Record being edited.
-    Record tempRecEdit; // Temporary Record to hold edited changes to Record being edited.
-
-    string editID;  // Search ID to locate record.
-    string recResp; //  User response to edit record.
-
-    int quantR;
-    float prcR;
-
-    cout << "\nEnter ID of record to edit: ";
-    getline(cin, editID);
-
-    // Check if nothing is entered.
-    while (editID == "")
-    {
-        cout << "\nYou didn't enter anything!\n";
-        cout << "\nEnter ID: ";
-        getline(cin, editID);
-    }
-
-    // Search for the ID.
-    int index = SearchID(rawArr_in, rawSize, editID);
-
-    if (index == -1)
-    {
-        cout << "\nRecord not Found." << endl;
-    }
-
-    else
-    {
-        cout << "\nRecord found: " << rawArr_in.GetRecArr()[index].GetID() << " -- "
-            << rawArr_in.GetRecArr()[index].GetModel() << " -- " << rawArr_in.GetRecArr()[index].GetQuantity() << " -- "
-            << rawArr_in.GetRecArr()[index].GetPrice() << "\n"
-            << "Index: " << index << endl;
-
-        cout << "\nEdit this record? (y/n):";
-        recResp = YesNoUserInput();
-
-        if (recResp == "Y" || recResp == "YES")
-        {
-            int editInput;   // user input for sub menu.
-            EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
-
-            // Store temporary record.
-            tempRec.SetID(rawArr_in.GetRecArr()[index].GetID());
-            tempRec.SetModel(rawArr_in.GetRecArr()[index].GetModel());
-            tempRec.SetQuantity(rawArr_in.GetRecArr()[index].GetQuantity());
-            tempRec.SetPrice(rawArr_in.GetRecArr()[index].GetPrice());
-
-            do
-            {
-                DisplayEditItemMenu();
-                editInput = MenuUserInput();
-
-                editMenu = (EditChoice)editInput; // cast to enum type.
-
-                switch (editMenu)
-                {
-                case EditChoice::EDIT_ID:
-                    idEdit = InputID(rawArr_in, rawSize, id_err);
-                    tempRecEdit.SetID(idEdit);
-                    if (tempRecEdit.GetID() == ToLower("r"))
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetID(idEdit);
-                        cout << "\nID successfully updated." << endl;
-                    }                       
-                    break;
-                case EditChoice::EDIT_MODEL:
-                    modEdit = InputModel(mod_err);
-                    tempRecEdit.SetModel(modEdit);
-                    if (tempRecEdit.GetModel() == ToLower("r"))
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetModel(modEdit);
-                        cout << "\nModel successfully updated." << endl;
-                    }
-                    
-                    break;
-                case EditChoice::EDIT_QUANTITY:
-                    quantEdit = InputQuantity(quant_err);
-                    quantR = int(quantEdit[0]);     // Convert string to int.
-                    tempRecEdit.SetQuantity(quantR);    // Set int to Record object.
-                    if (tempRecEdit.GetQuantity() == 114)
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetQuantity(quantR);
-                        cout << "\nQuantity successfully updated." << endl;
-                    }
-                    break;
-                case EditChoice::EDIT_PRICE:
-                    prcEdit = InputPrice(prc_err);
-                    prcR = float(prcEdit[0]);     // Convert string to float.
-                    tempRecEdit.SetPrice(prcR);    // Set float to Record object.
-                    if (tempRecEdit.GetPrice() == 114.0)
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetPrice(prcR);
-                        cout << "\nPrice successfully updated." << endl;
-                    }
-                    break;
-                case EditChoice::EDIT_RECORD:
-                    tempRec = InputRecord(rawArr_in, rawSize, id_err, mod_err, 
-                                        quant_err, prc_err);
-                    break;
-                case EditChoice::DISPLAY_RECORD:
-                    PrintRecord(tempRec);
-                    break;
-                case EditChoice::SAVE_RECORD:
-                    rawArr_in.GetRecArr()[index] = tempRec;
-                    WriteFile(rawArr_in, rawSize);
-                    ReadFile(recArr_in, pArr, errMsgs, arrSize, errSize, id_err,
-                        mod_err, quant_err, prc_err);
-                    cout << "\nRecord replaced." << endl;
-                    break;
-                case EditChoice::BACK_PREV:
-                    break;
-                default:
-                    SelectionError();
-                    break;
-                }
-            } while (editMenu != EditChoice::BACK_PREV);
-
-            
-            
-        }
-    }
-
-    
-}
-
-void DeleteRecord(RecordArray& recArr_in, int& arrSize, string& id_err)
-{
-    string delID;   // ID to delete.
-    string resp;  // User response. 
-
-    cout << "\nEnter ID for record to delete: ";
-    getline(cin, delID);
-
-    // Check if nothing is entered.
-    while (delID == "")
-    {
-        cout << "\nYou didn't enter anything!\n";
-        cout << "\nEnter ID: ";
-        getline(cin, delID);
-    }
-
-    while (!IDValid(delID, id_err))
-    {
-        cout << "\nID invalid...\n"
-            << "\n" << id_err << "\n";
-        cout << "\nEnter ID: ";
-        getline(cin, delID);
-
-        // Check if nothing is entered again.
-        while (delID == "")
-        {
-            cout << "\nYou didn't enter anything!\n";
-            cout << "\nEnter ID: ";
-            getline(cin, delID);
-        }
-
-    }
-
-    int index = SearchID(recArr_in, arrSize, delID);
-
-    if (index == -1)
-    {
-        cout << "\nRecord not Found." << endl;
-    }
-
-    else
-    {
-        // Display record if found.
-        cout << "\nRecord found: " << recArr_in.GetRecArr()[index].GetID() << " "
-            << recArr_in.GetRecArr()[index].GetModel() << " " << recArr_in.GetRecArr()[index].GetQuantity() << " "
-            << recArr_in.GetRecArr()[index].GetPrice() << "\n"
-            << "Index: " << index << endl;
-
-        cout << "\nDelete record on file? (y/n): ";
-        resp = YesNoUserInput();
-
-
-        if (resp == "Y" || resp == "YES")
-        {
-            for (int i = index; i < arrSize - 1; i++)
-            {
-                recArr_in.GetRecArr()[i] = recArr_in.GetRecArr()[i + 1];
-            }
-            arrSize--;
-
-            WriteFile(recArr_in, arrSize);
-            cout << "\nRecord deleted." << endl;
-
-        }
-    }
-
-}
-
-void PrintRecord(RecordArray& recArr_in, int& arrSize)
-{
-    cout << "\nDisplay Entered Records --\n" << endl;
-    Print(recArr_in, arrSize); // Print records to screen.
-}
-
-void SaveRecord(RecordArray& recArr_in, int& arrSize)
-{
-    string resp;
-
-    cout << "\nSave to record file? (y/n): ";
-    resp = YesNoUserInput();
-
-    if (resp == "Y" || resp == "YES")
-    {
-        WriteAppendFile(recArr_in, arrSize);
-        cout << "\nRecord saved." << endl;
-    }
-}

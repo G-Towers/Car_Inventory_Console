@@ -41,5 +41,11 @@
     <ClInclude Include="Interface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ErrMsgs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InvStorage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

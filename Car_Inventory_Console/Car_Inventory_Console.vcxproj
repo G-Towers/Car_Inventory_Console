@@ -133,7 +133,9 @@
     <ClCompile Include="RecordFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ErrMsgs.h" />
     <ClInclude Include="Interface.h" />
+    <ClInclude Include="InvStorage.h" />
     <ClInclude Include="Record.h" />
     <ClInclude Include="RecordArray.h" />
     <ClInclude Include="RecordFunctions.h" />

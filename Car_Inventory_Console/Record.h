@@ -19,7 +19,7 @@ const int MAX_INPUT_SIZE = 50;  // Maximum size of input array.
 const int MAX_ID_LENGTH = 7;    // Maximum length for ID number.
 const int MAX_PRICE_LENGTH = 10; // Maximum length for price.
 const int MIN_PRICE_LENGTH = 4; // Minimum length for price.
-const int MAX_ERR_MSG = 200;  // Maximum amount of error message strings.
+const int MAX_ERR_MSG = 100;  // Maximum amount of error message strings.
 
 class Record
 {

@@ -316,7 +316,7 @@ void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
             break;
         case ItemChoice::SAVE_ITEM:
             SaveRecord(inv);
-            inv.ResetInputArr();
+            inv.ResetInputRec();
             ReadFile(inv, err);
             break;
         case ItemChoice::PREV_MENU:

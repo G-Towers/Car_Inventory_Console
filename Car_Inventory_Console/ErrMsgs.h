@@ -10,34 +10,54 @@ using namespace std;
 class ErrMsgs
 {
 public:
-    ErrMsgs() { SetErrMsgs("", "", "", "", 0, ""); }
+    ErrMsgs()
+    {
+        errorMsgs = new string[MAX_ERR_MSG];
+        //SetErrMsgs("", "", "", "");
+    }
 
-    void SetErrMsgs(string id, string mdl, string quant, string prc, int err, string errMsg)
+    ~ErrMsgs()
+    {
+        delete[] errorMsgs;
+        errorMsgs = nullptr;
+    }
+
+    // { SetErrMsgs("", "", "", "", 0); }
+
+    void SetErrMsgs(string id, string mdl, string quant, string prc)
     {
         idErrMsg = id;
         mdlErrMsg = mdl;
         quantErrMsg = quant;
         prcErrMsg = prc;
-        errCount = err;
+        //errCount = err;
 
-        for (int i = 0; i < MAX_ERR_MSG; i++)
-        {
-            errorMsgs[i] = errMsg;
-        }
 
+    }
+
+    void ResetErrArr()
+    {
+        delete[] errorMsgs;
+        errorMsgs = new string[MAX_ERR_MSG];
+        errCount = 0;
+    }
+
+    void ResetErrStrings()
+    {
+        SetErrMsgs("", "", "", "");
     }
 
 public:
     // Error message strings.
-    string idErrMsg;
-    string mdlErrMsg;
-    string quantErrMsg;
-    string prcErrMsg;
+    string idErrMsg = "";
+    string mdlErrMsg  = "";
+    string quantErrMsg = "";
+    string prcErrMsg = "";
 
-    int errCount;    // How many records with errors in file.
+    int errCount = 0;    // How many records with errors in file.
 
     // Array of error messages.
-    string errorMsgs[MAX_ERR_MSG];
+    string* errorMsgs;
 
     
 };

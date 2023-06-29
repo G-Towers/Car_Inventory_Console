@@ -73,7 +73,7 @@ void ReadFile(InvStorage& inv, ErrMsgs& err)
         inputFile >> id >> mod >> quant >> prc;
 
         // Validate and store valid data.
-        if (IDValid(id, err) && ModelValid(mod, err) && QuantityValid(quant, err) && PriceValid(prc, err))
+        if (IDValid(id) && ModelValid(mod) && QuantityValid(quant) && PriceValid(prc))
         {
             // Write entries to record array.
             inv.carRec[inv.carCount].SetID(ToUpper(id));
@@ -117,7 +117,7 @@ void ReadFile(InvStorage& inv, ErrMsgs& err)
         }
 
         inputSize++;    // Increment the input size.
-
+        err.ResetErrStrings();
     }
 
     // Write to error file.
@@ -312,7 +312,41 @@ void WriteAppendFile(InvStorage& inv)
     outputFile.close();
 
 }
+bool IDValid(string id)
+{
+    bool valid = true;
 
+    // Check ID length.
+    if (id.length() < MAX_ID_LENGTH || id.length() > MAX_ID_LENGTH)
+    {
+        valid = false;
+    }
+
+    // Check ID if alpha-numeric.
+    for (size_t i = 0; i < id.length(); i++)
+    {
+        if (!isalnum(id.at(i)))
+        {
+           valid = false;
+           break;
+        }
+    }
+
+    // Check ID at index 0 and index 1 if alphabetical.
+    if (!isalpha(id.at(0)) || !isalpha(id.at(1)))
+    {
+        valid = false;
+    }
+
+    // Check ID at index 0 and index 1 if letters A - F.
+    if ((ToUpper(id).at(0) > 'F' || ToUpper(id).at(0) < 'A') || (ToUpper(id).at(1) > 'F' || ToUpper(id).at(1) < 'A'))
+    {
+        valid = false;
+    }
+
+
+    return valid;
+}
 bool IDValid(string id, ErrMsgs& err)
 {
     bool valid = true;
@@ -322,7 +356,7 @@ bool IDValid(string id, ErrMsgs& err)
     {
         err.idErrMsg += " -- ID must be 7 characters long.\n";
 
-        return false;
+        valid = false;
     }
  
     // Check ID if alpha-numeric.
@@ -330,8 +364,9 @@ bool IDValid(string id, ErrMsgs& err)
     {
         if (!isalnum(id.at(i)))
         {
-            err.idErrMsg = " -- ID must contain only alpha-numeric characters.\n";
+            err.idErrMsg += " -- ID must contain only alpha-numeric characters.\n";
             valid = false;
+            break;
 
         }
     }
@@ -354,6 +389,29 @@ bool IDValid(string id, ErrMsgs& err)
     return valid;
 }
 
+bool ModelValid(string mod)
+{
+    bool valid = true;
+
+    // Check model if alpha-numeric or underscore(_).
+    for (size_t i = 0; i < mod.length(); i++)
+    {
+        if (!isalnum(mod.at(i)) && (mod.at(i) != '_'))
+        {
+            valid = false;
+            break;
+        }
+    }
+
+    // Check model at index 0 if alphabetical.
+    if (!isalpha(mod.at(0)))
+    {
+        valid = false;
+    }
+
+    return valid;
+}
+
 bool ModelValid(string mod, ErrMsgs& err)
 {
     bool valid = true;
@@ -365,6 +423,7 @@ bool ModelValid(string mod, ErrMsgs& err)
         {
             err.mdlErrMsg = " -- Model must contain only alpha-numeric or underscore characters.\n";
             valid = false;
+            break;
 
         }
     }
@@ -374,6 +433,37 @@ bool ModelValid(string mod, ErrMsgs& err)
     {
         err.mdlErrMsg += " -- The first character in model must be an alpha character.\n";
         valid = false;
+    }
+
+    return valid;
+}
+
+bool QuantityValid(string quant)
+{
+    int quantity = 0;
+    bool valid = true;
+
+    // Check quantity is a number.
+    for (size_t i = 0; i < quant.length(); i++)
+    {
+        if (!isdigit(quant.at(i)) && quant.at(i) != '-')
+        {
+            valid = false;
+            break;
+        }
+
+    }
+
+    if (valid)
+    {
+        // Convert to integer.
+        quantity = stoi(quant);
+
+        // Check if quantity is less than 0.
+        if (quantity < 0)
+        {
+            valid = false;
+        }
     }
 
     return valid;
@@ -391,6 +481,7 @@ bool QuantityValid(string quant, ErrMsgs& err)
         {
             err.quantErrMsg = " -- Quantity must contain only numbers.\n";
             valid = false;
+            break;
 
         }
         
@@ -414,6 +505,47 @@ bool QuantityValid(string quant, ErrMsgs& err)
 
 }
 
+bool PriceValid(string prc)
+{
+    bool valid = true;
+
+    // Check price length.
+    if (prc.length() < MIN_PRICE_LENGTH || prc.length() > MAX_PRICE_LENGTH)
+    {
+        valid = false;
+    }
+
+    // Check price is a number.
+    for (size_t i = 0; i < prc.length(); i++)
+    {
+        if (!isdigit(prc.at(i)) && (prc.at(i) != '.') && (prc.at(i) != '-'))
+        {
+            valid = false;
+            break;
+
+        }
+
+    }
+
+    // Check if decimal is in the correct place.
+    if (prc[prc.length() - 3] != '.')
+    {
+        valid = false;
+    }
+
+    if (valid)
+    {
+        // Check if price is greater than 0. 
+        if (stof(prc) < 1)
+        {
+            valid = false;
+        }
+
+    }
+
+    return valid;
+}
+
 bool PriceValid(string prc, ErrMsgs& err)
 {
     bool valid = true;
@@ -421,7 +553,7 @@ bool PriceValid(string prc, ErrMsgs& err)
     // Check price length.
     if (prc.length() < MIN_PRICE_LENGTH || prc.length() > MAX_PRICE_LENGTH)
     {
-        err.prcErrMsg = " -- Price must be at least 4 characters,\n"
+        err.prcErrMsg += " -- Price must be at least 4 characters,\n"
               "    and not more than 10 characters long.\n";
 
         return false;
@@ -434,6 +566,7 @@ bool PriceValid(string prc, ErrMsgs& err)
         {
             err.prcErrMsg += " -- Price must be a number.\n";
             valid = false;
+            break;
 
 
         }

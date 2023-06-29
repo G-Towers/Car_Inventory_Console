@@ -34,20 +34,32 @@ void WriteAppendFile(InvStorage& inv);
 // Appends entries to the output file.
 // Uses car record array (valid records).
 
+bool IDValid(string id);
+// Validates ID string.
+// Returns true if ID string is valid, otherwise returns false.
+
 bool IDValid(string id, ErrMsgs& err);
-// Validates input file and user input for each record.
-// Returns true if input is valid, otherwise returns false and writes a description of
-// the error to errors.txt and to the screen.
-// Validates ID.
+// Validates ID string (overloaded).
+// Returns true if string is valid, otherwise returns false and writes a description of
+// the error to ErrMsgs object.
+
+bool ModelValid(string mod);
+// Validates model.
 
 bool ModelValid(string model, ErrMsgs& err);
-// Validates Model.
+// Validates model (overloaded).
+
+bool QuantityValid(string quant);
+// Validates quantity.
 
 bool QuantityValid(string quant, ErrMsgs& err);
-// Validates Quantity.
+// Validates quantity (overloaded).
+
+bool PriceValid(string prc);
+// Validates price.
 
 bool PriceValid(string prc, ErrMsgs& err);
-// Validates Price.
+// Validates price (overloaded).
 
 void Print(const InvStorage& inv);
 // Prints the entries to the screen.

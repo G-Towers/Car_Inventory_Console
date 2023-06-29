@@ -34,12 +34,27 @@ public:
         }
     }
 
-    void ResetInputArr()
+    void ResetCartRec()
+    {
+        delete[] carRec;
+        carRec = new Record[MAX_SIZE];
+        carCount = 0;
+    }
+
+    void ResetRawCarRec()
+    {
+        delete[] rawCarRec;
+        rawCarRec = new Record[MAX_SIZE];
+        rawCount = 0;
+    }
+
+    void ResetInputRec()
     {
         delete[] inputRec;
         inputRec = new Record[MAX_SIZE];
         inputCount = 0;
     }
+
 public:
     // Declare dynamic arrays.
     Record* carRec;  // Main record array of valid automobiles (only valid records).

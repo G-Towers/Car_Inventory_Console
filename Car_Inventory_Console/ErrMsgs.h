@@ -13,7 +13,7 @@ public:
     ErrMsgs()
     {
         errorMsgs = new string[MAX_ERR_MSG];
-        //SetErrMsgs("", "", "", "");
+
     }
 
     ~ErrMsgs()
@@ -22,7 +22,6 @@ public:
         errorMsgs = nullptr;
     }
 
-    // { SetErrMsgs("", "", "", "", 0); }
 
     void SetErrMsgs(string id, string mdl, string quant, string prc)
     {
@@ -30,8 +29,6 @@ public:
         mdlErrMsg = mdl;
         quantErrMsg = quant;
         prcErrMsg = prc;
-        //errCount = err;
-
 
     }
 

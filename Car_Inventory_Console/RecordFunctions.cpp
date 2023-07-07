@@ -628,7 +628,7 @@ void PrintRecord(Record& rec)
     cout << ToString(rec) << endl;
 }
 
-string ToString(Record& rec)
+string ToString(const Record& rec)
 {
     stringstream ss;    // Declare a string stream var.
 
@@ -681,18 +681,18 @@ string ToUpper(string target)
     return tempString;
 }
 
-void SearchRec(const InvStorage& inv, Record searchArr[], int& searchSize, string target)
+void SearchRec(const InvStorage& inv, RecordArray& searchArr,  string target)
 {
 
     string tempTarget = ToLower(target);    // Temporary target to lowercase string.
     char* char_arr = &tempTarget[0];    // tempTarget converted to char array.
-    size_t modelFound;   // To use with find().
-    size_t idFound;
+    size_t modelFound = 0;   // To use with find().
+    size_t idFound = 0;
 
-    Record linearSrch[MAX_SIZE]; // Array for items found from linear search.
-    Record partialSrch[MAX_SIZE]; // Array for items found from partial search.
-    int linearSize = 0;     // size of linear array.
-    int partialSize = 0;    // size of partial array. 
+    RecordArray linearSrch; // Array for items found from linear search.
+    RecordArray partialSrch; // Array for items found from partial search.
+    //int linearSize = 0;     // size of linear array.
+    //int partialSize = 0;    // size of partial array. 
 
 
     // Iterate through the records.
@@ -707,40 +707,40 @@ void SearchRec(const InvStorage& inv, Record searchArr[], int& searchSize, strin
         idFound = tempID.find(char_arr, 0, 3);
         modelFound = tempModel.find(char_arr, 0, 3);
 
-        // Compare records (linear search).
+        // Compare records (linear search) and add to linear search array.
         if ((tempTarget == tempID || tempTarget == tempModel))
         {
-            linearSrch[linearSize] = inv.carRec[i];
-            linearSize++;
+            linearSrch.recArr[linearSrch.arrSize].SetRecord(inv.carRec[i]);
+            linearSrch.arrSize++;
 
         }
 
-        // Partial search.
+        // Add results to partial search array.
         else if ((idFound != string::npos || modelFound != string::npos))
         {
-            partialSrch[partialSize] = inv.carRec[i];
-            partialSize++;
+            partialSrch.recArr[partialSrch.arrSize].SetRecord(inv.carRec[i]);
+            partialSrch.arrSize++;
         }
 
     }
 
     // Prioritize linear search results.
-    if (linearSize >= 1)
+    if (linearSrch.arrSize >= 1)
     {
-        for (int i = 0; i < linearSize; i++)
+        for (int i = 0; i < linearSrch.arrSize; i++)
         {
-            searchArr[i] = linearSrch[i];   // Assign results to search array.
-            searchSize = linearSize;
+            searchArr.recArr[i].SetRecord(linearSrch.recArr[i]);   // Assign results to search array.
+            searchArr.arrSize = linearSrch.arrSize;
         }
     }
 
     // Partial search results if no result from linear search. 
     else
     {
-        for (int i = 0; i < partialSize; i++)
+        for (int i = 0; i < partialSrch.arrSize; i++)
         {
-            searchArr[i] = partialSrch[i];
-            searchSize = partialSize;
+            searchArr.recArr[i].SetRecord(partialSrch.recArr[i]);
+            searchArr.arrSize = partialSrch.arrSize;
         }
     }
 
@@ -786,20 +786,20 @@ bool IDExists(const InvStorage& inv, string id)
     return false;
 }
 
-void PrintSearchResults(Record arr[], const int& arrSize)
+void PrintSearchResults(const RecordArray& arr)
 {
-    cout << "\nResults found: " << arrSize << '\n' << endl;
+    cout << "\nResults found: " << arr.arrSize << '\n' << endl;
     cout << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n";
     cout << "--------------------------------------------------------------------------------------------------------------" << endl;
 
-    if (arrSize == 0)
+    if (arr.arrSize == 0)
         cout << "\n" << setw(66) << "No result found.\n" << endl;
 
     else
         // Print the array.
-        for (int i = 0; i < arrSize; i++)
+        for (int i = 0; i < arr.arrSize; i++)
         {
-            cout << ToString(arr[i]) << endl;
+            cout << ToString(arr.recArr[i]) << endl;
         }
 
 }
@@ -871,15 +871,15 @@ void Search(const InvStorage& inv)
 {
     int searchCount = 0;    // Search object array size.
     string searchStr;   // User search.
-    Record searchRec[MAX_SIZE]; // Array for items found from search function.
+    RecordArray searchRec; // Array for items found from search function.
 
     cout << "\nSearch Records --\n" << endl;
     cout << "Enter a term to search for: ";
     getline(cin, searchStr);
     cout << endl;
 
-    SearchRec(inv, searchRec, searchCount, searchStr);
-    PrintSearchResults(searchRec, searchCount);
+    SearchRec(inv, searchRec, searchStr);
+    PrintSearchResults(searchRec);
 
     searchCount = 0;    // Reset the search array.
 }

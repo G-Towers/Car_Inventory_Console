@@ -54,10 +54,11 @@ public:
     string GetModel() const { return model; }
     int GetQuantity() const { return quantity; }
     float GetPrice() const { return price; }
+    Record GetRecord() const {}
 
     // Setters:
     void SetRecord(string id, string mod, int quant, float pr);
-
+    void SetRecord(Record rec);
     void SetID(string id) { SetRecord(id, model, quantity, price); }
     void SetModel(string mod) { SetRecord(ID, mod, quantity, price); }
     void SetQuantity(int quant) { SetRecord(ID, model, quant, price); }

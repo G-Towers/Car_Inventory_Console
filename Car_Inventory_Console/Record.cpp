@@ -9,6 +9,14 @@ void Record::SetRecord(string id, string mod, int quant, float pr)
     price = pr;
 }
 
+void Record::SetRecord(Record rec)
+{
+    ID = rec.ID;
+    model = rec.model;
+    quantity = rec.quantity;
+    price = rec.price;
+}
+
 void Record::operator=(const Record& obj)
 {
     ID = obj.ID;

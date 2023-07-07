@@ -69,7 +69,7 @@ void Print(const InvStorage& inv);
 void PrintRecord(Record& rec);
 // Prints a single record.
 
-string ToString(Record& rec);
+string ToString(const Record& rec);
 // Formats a Record for output to a file or the screen.
 // Precondition: Calling the file uses stringstream to format the Record object.
 // Postcondition: Returns a formatted string.
@@ -80,7 +80,7 @@ string ToLower(string target);
 string ToUpper(string target);
 // returns a string in uppercase. 
 
-void SearchRec(const InvStorage& inv, Record searchArr[], int& searchSize, string target);
+void SearchRec(const InvStorage& inv, RecordArray& searchArr, string target);
 // Uses linear search and partial search to search a Record for a string.
 
 int SearchID(const InvStorage& inv, string target);
@@ -91,7 +91,7 @@ bool IDExists(const InvStorage& inv, string id);
 // Uses linear search to determine whether ID is in use
 // Returns true if ID exists otherwise returns false.
 
-void PrintSearchResults(Record arr[], const int& arrSize);
+void PrintSearchResults(const RecordArray& arr);
 // Print search results to the screen.
 
 void BubbleSort(Record* [], int, bool(*cmp)(const Record*, const Record*));

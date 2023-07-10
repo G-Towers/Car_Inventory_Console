@@ -300,6 +300,34 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id)
     return false;
 }
 
+// Prints the list
+void PrintList(const InvList& list)
+{
+    if (list.GetHead() == nullptr)
+    {
+        cout << "\nThe list is empty." << endl;
+    }
+
+    else
+    {
+        cout << "\nList Items --\n" << endl;
+        Node* temp = list.GetHead();
+
+        cout << "Key" << setw(20) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
+            << "--------------------------------------------------------------------------------------------------------------" << endl;
+
+        while (temp != nullptr)
+        {
+            cout << ToString(temp) << endl;
+            temp = temp->GetNext();
+
+        }
+
+        cout << endl;
+
+    }
+}
+
 void PrintSearchResultsList(Record arr[], const int& arrSize)
 {
     // Create a new Node on the heap.

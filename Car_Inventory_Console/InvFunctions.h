@@ -29,6 +29,9 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id);
 // Uses linear search to determine whether ID is in use.
 // Returns true if ID exists otherwise returns false.
 
+void PrintList(const InvList& list);
+// Prints the list
+
 void PrintSearchResultsList(Record arr[], const int& arrSize);
 // Print search results to the screen.
 

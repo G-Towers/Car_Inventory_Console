@@ -42,13 +42,6 @@ public:
 	// Update the node with a new data value.
 	// Accesses the node by key value and updates data.
 
-	void PrintList();
-	// Prints the list
-
-	string ListRecOut(const Node* nod);
-	// Formats a Record for output to a file or the screen.
-	// Precondition: Calling the file uses stringstream to format the Record object.
-	// Postcondition: Returns a formatted string.
 
 private:
 	Node* head;	// Points to the first node object.

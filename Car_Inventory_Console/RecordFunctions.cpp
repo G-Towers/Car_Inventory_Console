@@ -1,4 +1,4 @@
-// Function Definitions
+// Implementation of array-based Record functions.
 
 #include "RecordFunctions.h"
 #include "Interface.h"
@@ -89,7 +89,7 @@ void ReadFile(InvStorage& inv, ErrMsgs& err)
 
         else
         {
-            // For invalid records, store appropriate error messages in error array.
+            // For invalid records, store appropriate error messages in error object.
             err.errorMsgs[err.errCount] = id + " " + mod + " " + quant + " " + prc + "\n";
 
             if (!IDValid(id, err))

@@ -1,3 +1,4 @@
+// Array-based Record functions.
 
 #ifndef RECORDFUNCTIONS_H
 #define RECORDFUNCTIONS_H

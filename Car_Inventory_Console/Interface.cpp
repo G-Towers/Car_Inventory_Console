@@ -102,6 +102,20 @@ void DisplaySortMenu()
     cout << "\nEnter your selection: ";
 }
 
+void DisplaySortMenuList()
+{
+    // Display the Sort sub-menu.
+    cout << "\n-- Sort Inventory Items --\n"
+        << "\nSort and Display Inventory Items By:\n"
+        << "1. ID number.\n"
+        << "2. Model.\n"
+        << "3. Quantity.\n"
+        << "4. Price.\n"
+        << "5. Key.\n"
+        << "6. Back to previous menu.\n" << endl;
+    cout << "\nEnter your selection: ";
+}
+
 void DisplayManageItemMenu()
 {
     // Display the item management sub-menu.
@@ -199,6 +213,46 @@ void SwitchMainMenu(InvStorage& inv, ErrMsgs& err)
     } while (mainMenu != MainChoice::QUIT);
 }
 
+void SwitchMainMenu(InvList& lstItem, ErrMsgs& err)
+{
+
+    MainChoice mainMenu = MainChoice::PRINT_ALL;
+
+    do
+    {
+        // Display the menu and prompt user for input.
+        DisplayMainMenu();
+        int userInput = MenuUserInput();
+        mainMenu = (MainChoice)userInput; // cast to enum type.
+
+        switch (mainMenu)
+        {
+        case MainChoice::PRINT_ALL:
+            cout << "List Size: " << lstItem.GetSize() << endl;
+            PrintList(lstItem);
+            break;
+        case MainChoice::PRINT_INVALID:
+            PrintInvalid(err.errCount);
+            break;
+        case MainChoice::SEARCH:
+            Search(lstItem);
+            break;
+        case MainChoice::SORT:
+            SwitchSortMenu(lstItem);
+            break;
+        case MainChoice::MANAGE_ITEM:
+            SwitchManageItemMenu(lstItem, err);
+            break;
+        case MainChoice::QUIT:
+            QuitMsg();
+            break;
+        default:
+            SelectionError();
+            break;
+        }
+    } while (mainMenu != MainChoice::QUIT);
+}
+
 void SwitchSortMenu(Record* ptrRec[], int& arrSize)
 {
     SortChoice sortMenu = SortChoice::SORT_ID;
@@ -223,6 +277,9 @@ void SwitchSortMenu(Record* ptrRec[], int& arrSize)
         case SortChoice::SORT_PRICE:
             SortPrice(ptrRec, arrSize);
             break;
+        case SortChoice::SORT_KEY:
+            //SortKey(lstItem);
+            break;
         case SortChoice::PREVIOUS_MENU:
             break;
         default:
@@ -233,46 +290,42 @@ void SwitchSortMenu(Record* ptrRec[], int& arrSize)
 
 }
 
-void SortID(Record* ptrArr[], int& arrSize)
+void SwitchSortMenu(InvList& lstItem)
 {
-    cout << "\nSort by ID number --\n" << endl;
 
-    // Bubble sort using lambda expression.
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return ToLower(r1->GetID()) > ToLower(r2->GetID()); });
+    SortChoice sortMenu = SortChoice::SORT_ID;
 
-    PrintSorted(ptrArr, arrSize);
-}
+    do
+    {
+        DisplaySortMenu();
+        int userInput = MenuUserInput();
+        sortMenu = (SortChoice)userInput; // cast to enum type.
 
-void SortModel(Record* ptrArr[], int& arrSize)
-{
-    cout << "\nSort by model --\n" << endl;
+        switch (sortMenu)
+        {
+        case SortChoice::SORT_ID:
+            SortID(lstItem);
+            break;
+        case SortChoice::SORT_MODEL:
+            SortModel(lstItem);
+            break;
+        case SortChoice::SORT_QUANTITY:
+            SortQuantity(lstItem);
+            break;
+        case SortChoice::SORT_PRICE:
+            SortPrice(lstItem);
+            break;
+        case SortChoice::SORT_KEY:
+            SortKey(lstItem);
+            break;
+        case SortChoice::PREVIOUS_MENU:
+            break;
+        default:
+            SelectionError();
+            break;
+        }
+    } while (sortMenu != SortChoice::PREVIOUS_MENU);
 
-
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return ToLower(r1->GetModel()) > ToLower(r2->GetModel()); });
-
-    PrintSorted(ptrArr, arrSize);
-}
-
-void SortQuantity(Record* ptrArr[], int& arrSize)
-{
-    cout << "\nSort by quantity --\n" << endl;
-
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return r1->GetQuantity() > r2->GetQuantity(); });
-
-    PrintSorted(ptrArr, arrSize);
-}
-
-void SortPrice(Record* ptrArr[], int& arrSize)
-{
-    cout << "\nSort by price --\n" << endl;
-
-    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
-        { return r1->GetPrice() > r2->GetPrice(); });
-
-    PrintSorted(ptrArr, arrSize);
 }
 
 void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
@@ -329,6 +382,449 @@ void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
 
 }
 
+void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
+{
+    int key;
+    Record rec;
+    ItemChoice ItemMenu = ItemChoice::INPUT_ITEM;
+
+    do
+    {
+        DisplayManageItemMenu();
+
+        int userInput = MenuUserInput();
+
+        // Allocate dynamic memory (make n1 globally accessible).
+        // Allows n1 to be used for every iteration of the do while loop.
+        Node* inputNode = new Node();
+
+        ItemMenu = (ItemChoice)userInput; // cast to enum type.
+
+        switch (ItemMenu)
+        {
+        case ItemChoice::INPUT_ITEM:
+            key = PromptKey(lstItem);
+            rec = InputRecord(err);
+            inputNode->SetKey(key);
+            inputNode->SetRecord(rec);
+            lstItem.AppendNode(inputNode);
+            lstItem++;
+            cout << "\nNode Appended." << endl;
+            break;
+        case ItemChoice::EDIT_ITEM:
+            SwitchEditRecord(lstItem, err);
+            break;
+        case ItemChoice::DELETE_ITEM:
+            DeleteItem(lstItem, err);
+            break;
+        case ItemChoice::PRINT_ITEM:
+            PrintList(lstItem);
+
+            break;
+        case ItemChoice::SAVE_ITEM:
+            SaveItems(lstItem);
+
+            break;
+        case ItemChoice::PREV_MENU:
+            break;
+        default:
+            SelectionError();
+            break;
+        }
+    } while (ItemMenu != ItemChoice::PREV_MENU);
+
+}
+
+void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
+{
+    string idEdit, modEdit, quantEdit, prcEdit; // Store edited input.
+    Record tempRec; // Temporary Record to hold the Record being edited.
+    Record tempRecEdit; // Temporary Record to hold edited changes to Record being edited.
+
+    string editID;  // Search ID to locate record.
+    string recResp; //  User response to edit record.
+
+    int quantR;
+    float prcR;
+
+    cout << "\nEnter ID of record to edit: ";
+    getline(cin, editID);
+
+    // Check if nothing is entered.
+    while (editID == "")
+    {
+        cout << "\nYou didn't enter anything!\n";
+        cout << "\nEnter ID: ";
+        getline(cin, editID);
+    }
+
+    // Search for the ID.
+    int index = SearchID(inv, editID);
+
+    if (index == -1)
+    {
+        cout << "\nRecord not Found." << endl;
+    }
+
+    else
+    {
+        cout << "\nRecord found: " << inv.rawCarRec[index].GetID() << " -- "
+            << inv.rawCarRec[index].GetModel() << " -- " << inv.rawCarRec[index].GetQuantity() << " -- "
+            << inv.rawCarRec[index].GetPrice() << "\n"
+            << "Index: " << index << endl;
+
+        cout << "\nEdit this record? (y/n):";
+        recResp = YesNoUserInput();
+
+        if (recResp == "Y" || recResp == "YES")
+        {
+            int editInput;   // user input for sub menu.
+            EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
+
+            // Store temporary record.
+            tempRec.SetID(inv.rawCarRec[index].GetID());
+            tempRec.SetModel(inv.rawCarRec[index].GetModel());
+            tempRec.SetQuantity(inv.rawCarRec[index].GetQuantity());
+            tempRec.SetPrice(inv.rawCarRec[index].GetPrice());
+
+            do
+            {
+                DisplayEditItemMenu();
+                editInput = MenuUserInput();
+
+                editMenu = (EditChoice)editInput; // cast to enum type.
+
+                switch (editMenu)
+                {
+                case EditChoice::EDIT_ID:
+                    idEdit = InputID(inv, err);
+                    tempRecEdit.SetID(idEdit);
+                    if (tempRecEdit.GetID() == ToLower("r"))
+                    {
+                        cout << "\nAborted..." << endl;
+                        break;
+                    }
+                    else
+                    {
+                        tempRec.SetID(idEdit);
+                        cout << "\nID successfully updated." << endl;
+                    }
+                    break;
+                case EditChoice::EDIT_MODEL:
+                    modEdit = InputModel(err);
+                    tempRecEdit.SetModel(modEdit);
+                    if (tempRecEdit.GetModel() == ToLower("r"))
+                    {
+                        cout << "\nAborted..." << endl;
+                        break;
+                    }
+                    else
+                    {
+                        tempRec.SetModel(modEdit);
+                        cout << "\nModel successfully updated." << endl;
+                    }
+
+                    break;
+                case EditChoice::EDIT_QUANTITY:
+                    quantEdit = InputQuantity(err);
+                    quantR = int(quantEdit[0]);     // Convert string to int.
+                    tempRecEdit.SetQuantity(quantR);    // Set int to Record object.
+                    if (tempRecEdit.GetQuantity() == 114)
+                    {
+                        cout << "\nAborted..." << endl;
+                        break;
+                    }
+                    else
+                    {
+                        tempRec.SetQuantity(quantR);
+                        cout << "\nQuantity successfully updated." << endl;
+                    }
+                    break;
+                case EditChoice::EDIT_PRICE:
+                    prcEdit = InputPrice(err);
+                    prcR = float(prcEdit[0]);     // Convert string to float.
+                    tempRecEdit.SetPrice(prcR);    // Set float to Record object.
+                    if (tempRecEdit.GetPrice() == 114.0)
+                    {
+                        cout << "\nAborted..." << endl;
+                        break;
+                    }
+                    else
+                    {
+                        tempRec.SetPrice(prcR);
+                        cout << "\nPrice successfully updated." << endl;
+                    }
+                    break;
+                case EditChoice::EDIT_RECORD:
+                    tempRec = InputRecord(inv, err);
+                    break;
+                case EditChoice::DISPLAY_RECORD:
+                    PrintRecord(tempRec);
+                    break;
+                case EditChoice::SAVE_RECORD:
+                    inv.rawCarRec[index] = tempRec;
+                    WriteFile(inv);
+                    ReadFile(inv, err);
+                    cout << "\nRecord replaced." << endl;
+                    break;
+                case EditChoice::BACK_PREV:
+                    break;
+                default:
+                    SelectionError();
+                    break;
+                }
+            } while (editMenu != EditChoice::BACK_PREV);
+
+
+
+        }
+    }
+
+
+}
+
+void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
+{
+    string id, mod, quant, prc; // Store edited input.
+    Record tempRec; // Temporary Record.
+    string editID;  // Search ID to locate record.
+    string resp; //  User response to edit record.
+    Node* tmpPtr = nullptr;
+
+    cout << "\nEnter ID of Item to edit: ";
+    getline(cin, editID);
+
+    // Check if nothing is entered.
+    while (editID == "")
+    {
+        cout << "\nYou didn't enter anything!\n";
+        cout << "\nEnter ID: ";
+        getline(cin, editID);
+    }
+
+    int key = SearchIDList(lstItem, editID);
+
+    if (key == -1)
+    {
+        cout << "\nItem not Found." << endl;
+    }
+
+    else
+    {
+        // Display record if found.
+        tmpPtr = lstItem.NodeExists(key);
+
+        cout << "\nItem found:\n\n" << tmpPtr->GetRecord().GetID() << " -- "
+            << tmpPtr->GetRecord().GetModel() << " -- " << tmpPtr->GetRecord().GetQuantity() << " -- "
+            << tmpPtr->GetRecord().GetPrice() << "\n"
+            << "\nList Item: " << key << endl;
+
+        // Redo this...
+        cout << "\nEdit this item? (y/n):";
+
+        getline(cin, resp);
+
+        // Check if nothing is entered.
+        while (resp == "")
+        {
+            cout << "\nYou didn't enter anything!\n";
+            cout << "\nEdit this item? (y/n): ";
+            getline(cin, resp);
+        }
+
+        if (resp == "y" || resp == "Y")
+        {
+            EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
+
+            // Store temporary record.
+            tempRec.SetID(tmpPtr->GetRecord().GetID());
+            tempRec.SetModel(tmpPtr->GetRecord().GetModel());
+            tempRec.SetQuantity(tmpPtr->GetRecord().GetQuantity());
+            tempRec.SetPrice(tmpPtr->GetRecord().GetPrice());
+
+            do
+            {
+                DisplayEditItemMenu();
+                int userInput = MenuUserInput();
+
+                editMenu = (EditChoice)userInput; // cast to enum type.
+
+                switch (editMenu)
+                {
+                case EditChoice::EDIT_ID:
+                    tempRec.SetID(InputID(err));
+                    tmpPtr->SetRecord(tempRec);
+                    cout << "\nID updated." << endl;
+                    break;
+                case EditChoice::EDIT_MODEL:
+                    tempRec.SetModel(InputModel(err));
+                    tmpPtr->SetRecord(tempRec);
+                    cout << "\nModel updated." << endl;
+                    break;
+                case EditChoice::EDIT_QUANTITY:
+                    tempRec.SetQuantity(stoi(InputQuantity(err)));
+                    tmpPtr->SetRecord(tempRec);
+                    cout << "\nQuantity updated." << endl;
+                    break;
+                case EditChoice::EDIT_PRICE:
+                    tempRec.SetPrice(stof(InputPrice(err)));
+                    tmpPtr->SetRecord(tempRec);
+                    cout << "\nPrice updated." << endl;
+                    break;
+                case EditChoice::EDIT_RECORD:
+                    tempRec = InputRecord(err);
+                    tmpPtr->SetRecord(tempRec);
+                    cout << "\nRecord updated." << endl;
+                    break;
+                case EditChoice::DISPLAY_RECORD:
+                    PrintList(lstItem);
+                    break;
+                case EditChoice::SAVE_RECORD:
+                    SaveItems(lstItem);
+                    break;
+                case EditChoice::BACK_PREV:
+                    break;
+                default:
+                    SelectionError();
+                    break;
+                }
+
+            } while (editMenu != EditChoice::BACK_PREV);
+
+        }
+
+    }
+
+}
+
+void SortID(Record* ptrArr[], int& arrSize)
+{
+    cout << "\nSort by ID number --\n" << endl;
+
+    // Bubble sort using lambda expression.
+    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
+        { return ToLower(r1->GetID()) > ToLower(r2->GetID()); });
+
+    PrintSorted(ptrArr, arrSize);
+}
+
+void SortID(InvList& lstItem)
+{
+    cout << "\nSort by ID Number --\n" << endl;
+    cout << "List Size: " << lstItem.GetSize() << endl;
+
+    Node* headNode = lstItem.GetHead();
+
+    // Bubble sort using lambda expression.
+    BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
+        { return ToLower(n1->GetRecord().GetID()) > ToLower(n2->GetRecord().GetID()); });
+
+    lstItem.SetHead(headNode);
+
+    PrintList(lstItem);
+
+
+}
+
+void SortModel(Record* ptrArr[], int& arrSize)
+{
+    cout << "\nSort by model --\n" << endl;
+
+
+    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
+        { return ToLower(r1->GetModel()) > ToLower(r2->GetModel()); });
+
+    PrintSorted(ptrArr, arrSize);
+}
+
+void SortModel(InvList& lstItem)
+{
+    cout << "\nSort by Model --\n" << endl;
+    cout << "List Size: " << lstItem.GetSize() << endl;
+
+    Node* headNode = lstItem.GetHead();
+
+    BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
+        { return ToLower(n1->GetRecord().GetModel()) > ToLower(n2->GetRecord().GetModel()); });
+
+    lstItem.SetHead(headNode);
+
+    PrintList(lstItem);
+
+
+}
+
+void SortQuantity(Record* ptrArr[], int& arrSize)
+{
+    cout << "\nSort by quantity --\n" << endl;
+
+    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
+        { return r1->GetQuantity() > r2->GetQuantity(); });
+
+    PrintSorted(ptrArr, arrSize);
+}
+
+void SortQuantity(InvList& lstItem)
+{
+    cout << "\nSort by Quantity --\n" << endl;
+    cout << "List Size: " << lstItem.GetSize() << endl;
+
+    Node* headNode = lstItem.GetHead();
+
+    BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
+        { return n1->GetRecord().GetQuantity() > n2->GetRecord().GetQuantity(); });
+
+    lstItem.SetHead(headNode);
+
+    PrintList(lstItem);
+
+
+}
+
+void SortPrice(Record* ptrArr[], int& arrSize)
+{
+    cout << "\nSort by price --\n" << endl;
+
+    BubbleSort(ptrArr, arrSize, [](const Record* r1, const Record* r2)
+        { return r1->GetPrice() > r2->GetPrice(); });
+
+    PrintSorted(ptrArr, arrSize);
+}
+
+void SortPrice(InvList& lstItem)
+{
+    cout << "\nSort by Price --\n" << endl;
+    cout << "List Size: " << lstItem.GetSize() << endl;
+
+    Node* headNode = lstItem.GetHead();
+
+    BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
+        { return n1->GetRecord().GetPrice() > n2->GetRecord().GetPrice(); });
+
+    lstItem.SetHead(headNode);
+
+    PrintList(lstItem);
+
+
+}
+
+void SortKey(InvList& lstItem)
+{
+    cout << "\nSort by Key --\n" << endl;
+    cout << "List Size: " << lstItem.GetSize() << endl;
+
+    Node* headNode = lstItem.GetHead();
+
+    BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
+        { return n1->GetKey() > n2->GetKey(); });
+
+    lstItem.SetHead(headNode);
+
+    PrintList(lstItem);
+}
+
+
+
 Record InputRecord(InvStorage& inv, ErrMsgs& err)
 {
     string id = "", mod = "", quant = "", prc = "";
@@ -372,6 +868,27 @@ Record InputRecord(InvStorage& inv, ErrMsgs& err)
     else
         tempRec.SetPrice(stof(prc));
 
+
+    return tempRec;
+
+}
+
+Record InputRecord(ErrMsgs& err)
+{
+    string id, mod, quant, prc;
+    Record tempRec; // Temporary Record.
+
+    id = InputID(err);
+    tempRec.SetID(id);
+
+    mod = InputModel(err);
+    tempRec.SetModel(mod);
+
+    quant = InputQuantity(err);
+    tempRec.SetQuantity(stoi(quant));
+
+    prc = InputPrice(err);
+    tempRec.SetPrice(stof(prc));
 
     return tempRec;
 
@@ -489,6 +1006,44 @@ string InputID(InvStorage& inv, ErrMsgs& err)
                     return id;
             }
 
+        }
+
+    }
+
+    return id;
+}
+
+string InputID(ErrMsgs& err)
+{
+    string id;
+
+    // Prompt the user for ID.
+    cout << "\nCar ID's are 7 characters long,\n"
+        << "The first 2 characters must be letters A - F.\n"
+        << "\nEnter a unique ID: ";
+    getline(cin, id);
+
+    // Check if nothing is entered.
+    while (id == "")
+    {
+        cout << "\nYou didn't enter anything!\n";
+        cout << "\nEnter ID: ";
+        getline(cin, id);
+    }
+
+    while (!IDValid(id, err))
+    {
+        cout << "\nID invalid...\n"
+            << "\n" << err.idErrMsg << "\n";
+        cout << "\nEnter ID: ";
+        getline(cin, id);
+
+        // Check if nothing is entered again.
+        while (id == "")
+        {
+            cout << "\nYou didn't enter anything!\n";
+            cout << "\nEnter ID: ";
+            getline(cin, id);
         }
 
     }
@@ -640,152 +1195,42 @@ string InputPrice(ErrMsgs& err)
     return prc;
 }
 
-void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
+int PromptKey(InvList& lstItem)
 {
-    string idEdit, modEdit, quantEdit, prcEdit; // Store edited input.
-    Record tempRec; // Temporary Record to hold the Record being edited.
-    Record tempRecEdit; // Temporary Record to hold edited changes to Record being edited.
+    Node* tmp = lstItem.GetHead();
+    string key;
 
-    string editID;  // Search ID to locate record.
-    string recResp; //  User response to edit record.
-
-    int quantR;
-    float prcR;
-
-    cout << "\nEnter ID of record to edit: ";
-    getline(cin, editID);
+    cout << "\nEnter key: ";
+    getline(cin, key);
 
     // Check if nothing is entered.
-    while (editID == "")
+    while (key == "")
     {
         cout << "\nYou didn't enter anything!\n";
-        cout << "\nEnter ID: ";
-        getline(cin, editID);
+        cout << "\nEnter key: ";
+        getline(cin, key);
     }
 
-    // Search for the ID.
-    int index = SearchID(inv, editID);
-
-    if (index == -1)
+    while (tmp != nullptr)
     {
-        cout << "\nRecord not Found." << endl;
-    }
+        cout << "\nList item already exists with key value of " << tmp->GetKey()
+            << ". Please Enter a different key value." << endl;
 
-    else
-    {
-        cout << "\nRecord found: " << inv.rawCarRec[index].GetID() << " -- "
-            << inv.rawCarRec[index].GetModel() << " -- " << inv.rawCarRec[index].GetQuantity() << " -- "
-            << inv.rawCarRec[index].GetPrice() << "\n"
-            << "Index: " << index << endl;
+        cout << "\nEnter key: ";
+        getline(cin, key);
 
-        cout << "\nEdit this record? (y/n):";
-        recResp = YesNoUserInput();
-
-        if (recResp == "Y" || recResp == "YES")
+        // Check if nothing is entered.
+        while (key == "")
         {
-            int editInput;   // user input for sub menu.
-            EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
-
-            // Store temporary record.
-            tempRec.SetID(inv.rawCarRec[index].GetID());
-            tempRec.SetModel(inv.rawCarRec[index].GetModel());
-            tempRec.SetQuantity(inv.rawCarRec[index].GetQuantity());
-            tempRec.SetPrice(inv.rawCarRec[index].GetPrice());
-
-            do
-            {
-                DisplayEditItemMenu();
-                editInput = MenuUserInput();
-
-                editMenu = (EditChoice)editInput; // cast to enum type.
-
-                switch (editMenu)
-                {
-                case EditChoice::EDIT_ID:
-                    idEdit = InputID(inv, err);
-                    tempRecEdit.SetID(idEdit);
-                    if (tempRecEdit.GetID() == ToLower("r"))
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetID(idEdit);
-                        cout << "\nID successfully updated." << endl;
-                    }
-                    break;
-                case EditChoice::EDIT_MODEL:
-                    modEdit = InputModel(err);
-                    tempRecEdit.SetModel(modEdit);
-                    if (tempRecEdit.GetModel() == ToLower("r"))
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetModel(modEdit);
-                        cout << "\nModel successfully updated." << endl;
-                    }
-
-                    break;
-                case EditChoice::EDIT_QUANTITY:
-                    quantEdit = InputQuantity(err);
-                    quantR = int(quantEdit[0]);     // Convert string to int.
-                    tempRecEdit.SetQuantity(quantR);    // Set int to Record object.
-                    if (tempRecEdit.GetQuantity() == 114)
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetQuantity(quantR);
-                        cout << "\nQuantity successfully updated." << endl;
-                    }
-                    break;
-                case EditChoice::EDIT_PRICE:
-                    prcEdit = InputPrice(err);
-                    prcR = float(prcEdit[0]);     // Convert string to float.
-                    tempRecEdit.SetPrice(prcR);    // Set float to Record object.
-                    if (tempRecEdit.GetPrice() == 114.0)
-                    {
-                        cout << "\nAborted..." << endl;
-                        break;
-                    }
-                    else
-                    {
-                        tempRec.SetPrice(prcR);
-                        cout << "\nPrice successfully updated." << endl;
-                    }
-                    break;
-                case EditChoice::EDIT_RECORD:
-                    tempRec = InputRecord(inv, err);
-                    break;
-                case EditChoice::DISPLAY_RECORD:
-                    PrintRecord(tempRec);
-                    break;
-                case EditChoice::SAVE_RECORD:
-                    inv.rawCarRec[index] = tempRec;
-                    WriteFile(inv);
-                    ReadFile(inv, err);
-                    cout << "\nRecord replaced." << endl;
-                    break;
-                case EditChoice::BACK_PREV:
-                    break;
-                default:
-                    SelectionError();
-                    break;
-                }
-            } while (editMenu != EditChoice::BACK_PREV);
-
-
-
+            cout << "\nYou didn't enter anything!\n";
+            cout << "\nEnter key: ";
+            getline(cin, key);
         }
+
+        tmp = lstItem.NodeExists(stoi(key));
     }
 
-
+    return stoi(key);
 }
 
 void DeleteRecord(InvStorage& inv, ErrMsgs& err)
@@ -856,10 +1301,92 @@ void DeleteRecord(InvStorage& inv, ErrMsgs& err)
 
 }
 
+void DeleteItem(InvList& lstItem, ErrMsgs& err)
+{
+    Node* tmpPtr = nullptr;
+    string delID;   // ID to delete.
+    string resp;
+
+    cout << "\nEnter ID for record to delete: ";
+    getline(cin, delID);
+
+    // Check if nothing is entered.
+    while (delID == "")
+    {
+        cout << "\nYou didn't enter anything!\n";
+        cout << "\nEnter ID: ";
+        getline(cin, delID);
+    }
+
+    while (!IDValid(delID, err))
+    {
+        cout << "\nID invalid...\n"
+            << "\n" << err.idErrMsg << "\n";
+        cout << "\nEnter ID: ";
+        getline(cin, delID);
+
+        // Check if nothing is entered again.
+        while (delID == "")
+        {
+            cout << "\nYou didn't enter anything!\n";
+            cout << "\nEnter ID: ";
+            getline(cin, delID);
+        }
+
+    }
+
+    int key = SearchIDList(lstItem, delID);
+
+    if (key == -1)
+    {
+        cout << "\nItem not Found." << endl;
+    }
+
+    else
+    {
+        // Display record if found.
+        tmpPtr = lstItem.NodeExists(key);
+
+
+        cout << "\nRecord found: " << tmpPtr->GetRecord().GetID() << " "
+            << tmpPtr->GetRecord().GetModel() << " " << tmpPtr->GetRecord().GetQuantity() << " "
+            << tmpPtr->GetRecord().GetPrice() << "\n"
+            << "List Item: " << key << endl;
+
+        cout << "\nDelete Item on file? (y/n): ";
+        getline(cin, resp);
+
+        // Check if nothing is entered.
+        while (resp == "")
+        {
+            cout << "\nYou didn't enter anything!\n";
+            cout << "\nDelete Item on file? (y/n): ";
+            getline(cin, resp);
+        }
+
+        if (resp == "y" || resp == "Y")
+        {
+            lstItem--;
+            lstItem.DeleteNodeByKey(key);
+            WriteFileList(lstItem);
+            cout << "\nItem deleted." << endl;
+        }
+
+
+    }
+
+}
+
 void PrintInputRecord(InvStorage& inv)
 {
     cout << "\nDisplay Entered Records --\n" << endl;
     Print(inv); // Print records to screen.
+}
+
+void PrintItems()
+{
+    cout << "\nDisplay Entered Inventory Items --\n" << endl;
+
 }
 
 void SaveRecord(InvStorage& inv)
@@ -873,6 +1400,28 @@ void SaveRecord(InvStorage& inv)
     {
         WriteAppendFile(inv);
         cout << "\nRecord saved." << endl;
+    }
+}
+
+void SaveItems(InvList& lstItem)
+{
+    string resp;
+
+    cout << "\nSave to file? (y/n): ";
+    getline(cin, resp);
+
+    // Check if nothing is entered.
+    while (resp == "")
+    {
+        cout << "\nYou didn't enter anything!\n";
+        cout << "\nSave to file? (y/n): ";
+        getline(cin, resp);
+    }
+
+    if (resp == "y" || resp == "Y")
+    {
+        WriteFileList(lstItem);
+        cout << "\nItems saved to file." << endl;
     }
 }
 

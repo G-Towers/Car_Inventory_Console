@@ -130,7 +130,7 @@ void ReadFileList(InvList& lstItem, int& list_size, ErrMsgs& err)
 
 }
 
-void WriteFileList(InvList lstItem, int& list_size)
+void WriteFileList(InvList lstItem)
 {
     Node* tmp = lstItem.GetHead();
 
@@ -154,7 +154,7 @@ void WriteFileList(InvList lstItem, int& list_size)
     outputFile.precision(2);
 
     // Write to the file.
-    for (int i = 0; i < list_size - 1; i++)
+    for (int i = 0; i < lstItem.GetSize() - 1; i++)
     {
         outputFile << tmp->GetRecord().GetID() << " "
             << tmp->GetRecord().GetModel() << " "
@@ -176,7 +176,23 @@ void WriteFileList(InvList lstItem, int& list_size)
 
 }
 
-void SearchList(InvList& lstItem, Record searchArr[], int& searchSize, string target)
+void Search(InvList& lstItem)
+{
+    string searchStr;
+    RecordArray searchArr; // Array for items found from both.
+    int searchSize = 0;     // size of search array.
+
+    cout << "\nSearch Records --\n" << endl;
+    cout << "Enter a term to search for: ";
+    getline(cin, searchStr);
+    cout << endl;
+
+    SearchList(lstItem, searchArr, searchStr);
+    PrintSearchResults(searchArr);
+
+}
+
+void SearchList(InvList& lstItem, RecordArray& searchArr, string target)
 {
     string tempTarget = ToLower(target);    // Temporary target to lowercase string.
     char* char_arr = &tempTarget[0];    // tempTarget converted to char array.
@@ -184,11 +200,11 @@ void SearchList(InvList& lstItem, Record searchArr[], int& searchSize, string ta
     size_t idFound;
 
     // Arrays for search results
-    Record linearSrch[MAX_SIZE]; // Array for items found from linear search.
-    Record partialSrch[MAX_SIZE]; // Array for items found from partial search.
+    RecordArray linearSrch; // Array for items found from linear search.
+    RecordArray partialSrch; // Array for items found from partial search.
 
-    int linearSize = 0;     // size of linear array.
-    int partialSize = 0;    // size of partial array. 
+    //int linearSize = 0;     // size of linear array.
+    //int partialSize = 0;    // size of partial array. 
 
 
     Node* temp = nullptr;
@@ -213,15 +229,15 @@ void SearchList(InvList& lstItem, Record searchArr[], int& searchSize, string ta
             temp = ptr;	// if the target being passed is in the list
             // temp will be assigned the address of that node.
 
-            linearSrch[linearSize] = temp->GetRecord();
-            linearSize++;
+            linearSrch.recArr[linearSrch.arrSize] = temp->GetRecord();
+            linearSrch.arrSize++;
         }
 
         // Partial search.
         else if ((idFound != string::npos || modelFound != string::npos))
         {
-            partialSrch[partialSize] = ptr->GetRecord();
-            partialSize++;
+            partialSrch.recArr[partialSrch.arrSize] = ptr->GetRecord();
+            partialSrch.arrSize++;
         }
 
 
@@ -232,22 +248,22 @@ void SearchList(InvList& lstItem, Record searchArr[], int& searchSize, string ta
 
 
     // Prioritize linear search results.
-    if (linearSize >= 1)
+    if (linearSrch.arrSize >= 1)
     {
-        for (int i = 0; i < linearSize; i++)
+        for (int i = 0; i < linearSrch.arrSize; i++)
         {
-            searchArr[i] = linearSrch[i];   // Assign results to search array.
-            searchSize = linearSize;
+            searchArr.recArr[i].SetRecord(linearSrch.recArr[i]);   // Assign results to search array.
+            searchArr.arrSize = linearSrch.arrSize;
         }
     }
 
     // Partial search results if no result from linear search. 
     else
     {
-        for (int i = 0; i < partialSize; i++)
+        for (int i = 0; i < partialSrch.arrSize; i++)
         {
-            searchArr[i] = partialSrch[i];
-            searchSize = partialSize;
+            searchArr.recArr[i].SetRecord(partialSrch.recArr[i]);
+            searchArr.arrSize = partialSrch.arrSize;
         }
     }
 

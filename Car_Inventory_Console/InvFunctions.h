@@ -14,12 +14,15 @@ void ReadFileList(InvList& lstItem, int& list_size, ErrMsgs& err);
 // Precondition: "record.txt" must be available to read input from.
 // Postcondition: Validated records from  input file are written to the linked list.
 
-void WriteFileList(InvList lstItem, int& list_size);
+void WriteFileList(InvList lstItem);
 // Writes to the output file (replaces all).
 
+void Search(InvList& lstItem);
+// Search function for linked list switch statement.
+
+void SearchList(InvList& lstItem, RecordArray& searchArr, string target);
 // Uses linear search and partial search to search the list for a string.
 // Puts results from search into arrays.
-void SearchList(InvList& lstItem, Record searchArr[], int& searchSize, string target);
 
 int SearchIDList(const InvList& lstItem, string target);
 // Uses linear search to search for ID. Returns the Key of ID if found.

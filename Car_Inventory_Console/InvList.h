@@ -42,9 +42,21 @@ public:
 	// Update the node with a new data value.
 	// Accesses the node by key value and updates data.
 
+	int GetSize() const { return listSize; }
+	// Get the size of the list.
+
+	void SetSize(int size) { listSize = size; }
+	// Set the listSize.
+
+	// Overloads.
+	void operator++() { ++listSize; }	// prefix
+	void operator++(int) { listSize++; }	// postfix
+	void operator--() { --listSize; }	// prefix
+	void operator--(int) { listSize--; }	// postfix
 
 private:
 	Node* head;	// Points to the first node object.
+	int listSize = 0;
 
 };
 

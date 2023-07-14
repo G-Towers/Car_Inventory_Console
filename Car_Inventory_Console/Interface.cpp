@@ -158,6 +158,7 @@ void SwitchWelcomeMenu(InvStorage& inv, InvList& lstItem, ErrMsgs& err)
         {
         case WelcomeChoice::ARRAY_TYPE:
             ReadFile(inv, err);
+            RawReadFile(inv);
             SwitchMainMenu(inv, err);
             break;
         case WelcomeChoice::LIST_TYPE:
@@ -279,7 +280,7 @@ void SwitchSortMenu(Record* ptrRec[], int& arrSize)
             SortPrice(ptrRec, arrSize);
             break;
         case SortChoice::SORT_KEY:
-            //SortKey(lstItem);
+            // Exit menu.
             break;
         case SortChoice::PREVIOUS_MENU:
             break;
@@ -287,7 +288,7 @@ void SwitchSortMenu(Record* ptrRec[], int& arrSize)
             SelectionError();
             break;
         }
-    } while (sortMenu != SortChoice::PREVIOUS_MENU);
+    } while (sortMenu != SortChoice::SORT_KEY);
 
 }
 
@@ -298,7 +299,7 @@ void SwitchSortMenu(InvList& lstItem)
 
     do
     {
-        DisplaySortMenu();
+        DisplaySortMenuList();
         int userInput = MenuUserInput();
         sortMenu = (SortChoice)userInput; // cast to enum type.
 

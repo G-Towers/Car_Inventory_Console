@@ -365,7 +365,7 @@ void PrintSearchResultsList(Record arr[], const int& arrSize)
         for (int i = 0; i < arrSize; i++)
         {
             nod->SetRecord(arr[i]);
-            cout << ToString(nod) << endl;
+            cout << ToStringKey(nod) << endl;
         }
 
 }

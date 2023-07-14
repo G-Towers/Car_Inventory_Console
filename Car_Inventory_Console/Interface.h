@@ -38,7 +38,7 @@ void DisplayEditItemMenu();
 
 /*************************************** -- Switch Statement Functions-- **************************************/
 
-void SwitchWelcomeMenu(InvStorage& inv, ErrMsgs& err);
+void SwitchWelcomeMenu(InvStorage& inv, InvList& lstItem, ErrMsgs& err);
 // Switch statements for Welcome Menu.
 
 void SwitchMainMenu(InvStorage& inv, ErrMsgs& err);

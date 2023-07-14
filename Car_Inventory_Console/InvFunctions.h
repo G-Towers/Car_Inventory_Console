@@ -4,12 +4,12 @@
 #include "InvList.h"
 #include "ErrMsgs.h"
 
-string ToString(Node* nod);
-// Formats a Record for output to a file or the screen.
+string ToStringKey(const Node* nod);
+// Formats a Record + Key for output to a file or the screen.
 // Precondition: Calling the file uses stringstream to format the Record object.
 // Postcondition: Returns a formatted string.
 
-void ReadFileList(InvList& lstItem, int& list_size, ErrMsgs& err);
+void ReadFileList(InvList& lstItem, ErrMsgs& err);
 // Reads and validates entries from the input file.
 // Precondition: "record.txt" must be available to read input from.
 // Postcondition: Validated records from  input file are written to the linked list.

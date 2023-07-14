@@ -144,7 +144,7 @@ void DisplayEditItemMenu()
     cout << "\nEnter your selection: ";
 }
 
-void SwitchWelcomeMenu(InvStorage& inv, ErrMsgs& err)
+void SwitchWelcomeMenu(InvStorage& inv, InvList& lstItem, ErrMsgs& err)
 {
     WelcomeChoice welcomeMenu = WelcomeChoice::ARRAY_TYPE;  // Wecome menu enum.
 
@@ -161,7 +161,8 @@ void SwitchWelcomeMenu(InvStorage& inv, ErrMsgs& err)
             SwitchMainMenu(inv, err);
             break;
         case WelcomeChoice::LIST_TYPE:
-            
+            ReadFileList(lstItem, err);
+            SwitchMainMenu(lstItem, err);
             break;
         case WelcomeChoice::QUIT_WELCOME:
             QuitMsg();

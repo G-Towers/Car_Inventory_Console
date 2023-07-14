@@ -3,24 +3,28 @@
 #include "InvFunctions.h"
 #include "RecordFunctions.h"
 
-string ToString(Node* nod)
+string ToStringKey(const Node* nod)
 {
     stringstream ss;    // Declare a string stream var.
+
+    // Set the key to at least 2 digits.
+    ss << "(" << setfill('0') << setw(2) << nod->GetKey() << setw(0) << setfill(' ') << ")";
 
     // Set the decimal point.
     ss.setf(ios::fixed);
     ss.setf(ios::showpoint);
     ss.precision(2);
 
-    ss << setw(11) << ' ' << setw(17) << nod->GetRecord().GetID()
+    ss << setw(10) << ' ' << setw(14) << nod->GetRecord().GetID()
         << setw(15) << ' ' << left << setw(20) << nod->GetRecord().GetModel()
         << setw(5) << ' ' << right << setw(5) << nod->GetRecord().GetQuantity()
         << setw(10) << ' ' << setw(10) << nod->GetRecord().GetPrice();
 
     return ss.str();
+
 }
 
-void ReadFileList(InvList& lstItem, int& list_size, ErrMsgs& err)
+void ReadFileList(InvList& lstItem, ErrMsgs& err)
 {
     int inputSize = 0;  // Input file size.
     int key = 0;
@@ -71,7 +75,7 @@ void ReadFileList(InvList& lstItem, int& list_size, ErrMsgs& err)
             fileNode->SetKey(key);
             fileNode->SetRecord(rec);
             lstItem.AppendNode(fileNode);
-            list_size++;
+            lstItem++;
             key++;
 
         }
@@ -334,7 +338,7 @@ void PrintList(const InvList& list)
 
         while (temp != nullptr)
         {
-            cout << ToString(temp) << endl;
+            cout << ToStringKey(temp) << endl;
             temp = temp->GetNext();
 
         }

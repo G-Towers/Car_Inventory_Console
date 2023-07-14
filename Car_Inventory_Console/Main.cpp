@@ -8,10 +8,11 @@
 int main()
 {
     InvStorage carInv;  // Car inventory arrays.
+    InvList carList;    // Car inventory linked list.
     ErrMsgs carErr;     // Error messages.
    
 
-    SwitchWelcomeMenu(carInv, carErr);
+    SwitchWelcomeMenu(carInv, carList, carErr);
 
 
     return 0;

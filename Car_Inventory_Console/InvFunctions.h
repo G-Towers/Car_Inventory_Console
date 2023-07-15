@@ -35,7 +35,7 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id);
 void PrintList(const InvList& list);
 // Prints the list
 
-void PrintSearchResultsList(Record arr[], const int& arrSize);
+void PrintSearchResultsList(const RecordArray& arr);
 // Print search results to the screen.
 
 Node* SwapPtr(Node* ptr1, Node* ptr2);

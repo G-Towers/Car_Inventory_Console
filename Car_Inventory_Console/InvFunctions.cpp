@@ -192,7 +192,7 @@ void Search(InvList& lstItem)
     cout << endl;
 
     SearchList(lstItem, searchArr, searchStr);
-    PrintSearchResults(searchArr);
+    PrintSearchResultsList(searchArr);
 
 }
 
@@ -348,23 +348,23 @@ void PrintList(const InvList& list)
     }
 }
 
-void PrintSearchResultsList(Record arr[], const int& arrSize)
+void PrintSearchResultsList(const RecordArray& arr)
 {
     // Create a new Node on the heap.
     Node* nod = new Node();
 
-    cout << "\nResults found: " << arrSize << '\n' << endl;
+    cout << "\nResults found: " << arr.GetSize() << '\n' << endl;
     cout << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n";
     cout << "--------------------------------------------------------------------------------------------------------------" << endl;
 
-    if (arrSize == 0)
+    if (arr.GetSize() == 0)
         cout << "\n" << setw(66) << "No result found.\n" << endl;
 
     else
         // Print the array.
-        for (int i = 0; i < arrSize; i++)
+        for (int i = 0; i < arr.GetSize(); i++)
         {
-            nod->SetRecord(arr[i]);
+            nod->SetRecord(arr.GetRecArr()[i]);
             cout << ToStringKey(nod) << endl;
         }
 

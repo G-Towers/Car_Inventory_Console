@@ -78,8 +78,7 @@ void DisplayWelcomeMenu()
 void DisplayMainMenu()
 {
     // Display main menu.
-    cout << "\n-- Record Array implementation -- \n"
-        << "\n1. Display Records on file.\n"
+    cout << "\n1. Display Records on file.\n"
         << "2. Display Invalid Records.\n"
         << "3. Search Records.\n"
         << "4. Sort Records.\n"
@@ -182,6 +181,7 @@ void SwitchMainMenu(InvStorage& inv, ErrMsgs& err)
 
     do
     {
+        cout << "\n-- Record Array Implementation -- " << endl;
         DisplayMainMenu();  // Display the main menu.
         int userInput = MenuUserInput();    // user input.
         mainMenu = (MainChoice)userInput; // cast to enum type.
@@ -206,7 +206,7 @@ void SwitchMainMenu(InvStorage& inv, ErrMsgs& err)
             SwitchManageItemMenu(inv, err);
             break;
         case MainChoice::QUIT:
-            QuitMsg();
+            //QuitMsg();
             break;
         default:
             SelectionError();
@@ -222,6 +222,7 @@ void SwitchMainMenu(InvList& lstItem, ErrMsgs& err)
 
     do
     {
+        cout << "\n-- Linked List Implementation -- " << endl;
         // Display the menu and prompt user for input.
         DisplayMainMenu();
         int userInput = MenuUserInput();
@@ -246,7 +247,7 @@ void SwitchMainMenu(InvList& lstItem, ErrMsgs& err)
             SwitchManageItemMenu(lstItem, err);
             break;
         case MainChoice::QUIT:
-            QuitMsg();
+            //QuitMsg();
             break;
         default:
             SelectionError();

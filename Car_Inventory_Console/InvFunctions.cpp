@@ -207,7 +207,7 @@ void SearchList(InvList& lstItem, InvList& searchList, string target)
     InvList partialLst; // List for items found from partial search.
 
 
-    Node* temp = nullptr;   // Used for search Lists.
+    Node* temp = nullptr;   // Used for partial and linear search Lists.
     Node* ptr = lstItem.GetHead();	// Local pointer for this function only.
     // Used in pointing to nodes in a list (while traversing the list).
 
@@ -229,8 +229,6 @@ void SearchList(InvList& lstItem, InvList& searchList, string target)
         // Check each node for the target value (Linear Search).
         if (tempID == tempTarget || tempModel == tempTarget)
         {
-            //temp = ptr;	// if the target being passed is in the list
-            // temp will be assigned the address of that node.
             temp->SetKey(ptr->GetKey());
             temp->SetRecord(ptr->GetRecord());
             linearLst.AppendNode(temp);
@@ -240,7 +238,6 @@ void SearchList(InvList& lstItem, InvList& searchList, string target)
         // Partial search.
         else if ((idFound != string::npos || modelFound != string::npos))
         {
-            //cout << "Key: " << ptr->GetKey() << "  Record: " << ptr->GetRecord() << endl;
             temp->SetKey(ptr->GetKey());
             temp->SetRecord(ptr->GetRecord());
             partialLst.AppendNode(temp);

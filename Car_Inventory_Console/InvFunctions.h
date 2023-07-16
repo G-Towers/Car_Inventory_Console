@@ -20,9 +20,9 @@ void WriteFileList(InvList lstItem);
 void Search(InvList& lstItem);
 // Search function for linked list switch statement.
 
-void SearchList(InvList& lstItem, InvList& searchArr, string target);
+void SearchList(InvList& lstItem, InvList& searchList, string target);
 // Uses linear search and partial search to search the list for a string.
-// Puts results from search into arrays.
+// Puts results from search into searchList.
 
 int SearchIDList(const InvList& lstItem, string target);
 // Uses linear search to search for ID. Returns the Key of ID if found.

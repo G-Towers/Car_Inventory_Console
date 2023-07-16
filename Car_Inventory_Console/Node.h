@@ -50,7 +50,7 @@ public:
 
 
 
-public:
+private:
 	int key;	// A unique value to identify and refer (access) the node.
 	Record rec;	// The data stored in that node.
 

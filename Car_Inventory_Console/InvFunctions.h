@@ -20,7 +20,7 @@ void WriteFileList(InvList lstItem);
 void Search(InvList& lstItem);
 // Search function for linked list switch statement.
 
-void SearchList(InvList& lstItem, RecordArray& searchArr, string target);
+void SearchList(InvList& lstItem, InvList& searchArr, string target);
 // Uses linear search and partial search to search the list for a string.
 // Puts results from search into arrays.
 
@@ -35,7 +35,7 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id);
 void PrintList(const InvList& list);
 // Prints the list
 
-void PrintSearchResultsList(const RecordArray& arr);
+void PrintSearchResultsList(const InvList& list);
 // Print search results to the screen.
 
 Node* SwapPtr(Node* ptr1, Node* ptr2);

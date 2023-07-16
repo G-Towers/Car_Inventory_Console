@@ -27,7 +27,7 @@ string ToStringKey(const Node* nod)
 void ReadFileList(InvList& lstItem, ErrMsgs& err)
 {
     int inputSize = 0;  // Input file size.
-    int key = 0;
+    int key = 1;
 
     Record rec;
     Node* fileNode = nullptr;
@@ -183,42 +183,41 @@ void WriteFileList(InvList lstItem)
 void Search(InvList& lstItem)
 {
     string searchStr;
-    RecordArray searchArr; // Array for items found from both.
-    int searchSize = 0;     // size of search array.
+    InvList searchLst; // List for items found.
 
     cout << "\nSearch Records --\n" << endl;
     cout << "Enter a term to search for: ";
     getline(cin, searchStr);
     cout << endl;
 
-    SearchList(lstItem, searchArr, searchStr);
-    PrintSearchResultsList(searchArr);
+    SearchList(lstItem, searchLst, searchStr);
+    PrintSearchResultsList(searchLst);
 
 }
 
-void SearchList(InvList& lstItem, RecordArray& searchArr, string target)
+void SearchList(InvList& lstItem, InvList& searchList, string target)
 {
     string tempTarget = ToLower(target);    // Temporary target to lowercase string.
     char* char_arr = &tempTarget[0];    // tempTarget converted to char array.
     size_t modelFound;   // To use with find().
     size_t idFound;
 
-    // Arrays for search results
-    RecordArray linearSrch; // Array for items found from linear search.
-    RecordArray partialSrch; // Array for items found from partial search.
-
-    //int linearSize = 0;     // size of linear array.
-    //int partialSize = 0;    // size of partial array. 
+    // List for search results
+    InvList linearLst; // List for items found from linear search.
+    InvList partialLst; // List for items found from partial search.
 
 
-    Node* temp = nullptr;
+    Node* temp = nullptr;   // Used for search Lists.
     Node* ptr = lstItem.GetHead();	// Local pointer for this function only.
-    // used to assign the node head is pointing to (while traversing the list).
+    // Used in pointing to nodes in a list (while traversing the list).
 
 
     // Traverse the list.
     while (ptr != nullptr)	// Iterate through the entire list.
     {
+        // Allocate memory for temp.
+        temp = new Node();
+
         // Temporary lowercase strings for ID and model.
         string tempID = ToLower(ptr->GetRecord().GetID());
         string tempModel = ToLower(ptr->GetRecord().GetModel());
@@ -230,46 +229,36 @@ void SearchList(InvList& lstItem, RecordArray& searchArr, string target)
         // Check each node for the target value (Linear Search).
         if (tempID == tempTarget || tempModel == tempTarget)
         {
-            temp = ptr;	// if the target being passed is in the list
+            //temp = ptr;	// if the target being passed is in the list
             // temp will be assigned the address of that node.
-
-            linearSrch.recArr[linearSrch.arrSize] = temp->GetRecord();
-            linearSrch.arrSize++;
+            temp->SetKey(ptr->GetKey());
+            temp->SetRecord(ptr->GetRecord());
+            linearLst.AppendNode(temp);
+            linearLst++;
         }
 
         // Partial search.
         else if ((idFound != string::npos || modelFound != string::npos))
         {
-            partialSrch.recArr[partialSrch.arrSize] = ptr->GetRecord();
-            partialSrch.arrSize++;
+            //cout << "Key: " << ptr->GetKey() << "  Record: " << ptr->GetRecord() << endl;
+            temp->SetKey(ptr->GetKey());
+            temp->SetRecord(ptr->GetRecord());
+            partialLst.AppendNode(temp);
+            partialLst++;
         }
-
-
 
         ptr = ptr->GetNext(); // Store the address of the next node.
         // This is how the traversal is incremented from node to node.
     }
 
-
     // Prioritize linear search results.
-    if (linearSrch.arrSize >= 1)
-    {
-        for (int i = 0; i < linearSrch.arrSize; i++)
-        {
-            searchArr.recArr[i].SetRecord(linearSrch.recArr[i]);   // Assign results to search array.
-            searchArr.arrSize = linearSrch.arrSize;
-        }
-    }
+    if (linearLst.GetSize() >= 1)
+        searchList = linearLst;
 
     // Partial search results if no result from linear search. 
     else
-    {
-        for (int i = 0; i < partialSrch.arrSize; i++)
-        {
-            searchArr.recArr[i].SetRecord(partialSrch.recArr[i]);
-            searchArr.arrSize = partialSrch.arrSize;
-        }
-    }
+        searchList = partialLst;
+
 
 }
 
@@ -348,25 +337,32 @@ void PrintList(const InvList& list)
     }
 }
 
-void PrintSearchResultsList(const RecordArray& arr)
+void PrintSearchResultsList(const InvList& list)
 {
-    // Create a new Node on the heap.
-    Node* nod = new Node();
-
-    cout << "\nResults found: " << arr.GetSize() << '\n' << endl;
-    cout << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n";
-    cout << "--------------------------------------------------------------------------------------------------------------" << endl;
-
-    if (arr.GetSize() == 0)
-        cout << "\n" << setw(66) << "No result found.\n" << endl;
+    if (list.GetHead() == nullptr)
+    {
+        cout << "\nNo result found." << endl;
+    }
 
     else
-        // Print the array.
-        for (int i = 0; i < arr.GetSize(); i++)
+    {
+        Node* temp = list.GetHead();
+
+        cout << "\nResults found: " << list.GetSize() << '\n' << endl;
+
+        cout << "Key" << setw(20) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
+            << "--------------------------------------------------------------------------------------------------------------" << endl;
+
+        while (temp != nullptr)
         {
-            nod->SetRecord(arr.GetRecArr()[i]);
-            cout << ToStringKey(nod) << endl;
+            cout << ToStringKey(temp) << endl;
+            temp = temp->GetNext();
+
         }
+
+        cout << endl;
+    }
+
 
 }
 

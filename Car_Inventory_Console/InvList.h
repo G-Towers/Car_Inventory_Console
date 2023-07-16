@@ -13,6 +13,14 @@ public:
 	InvList(Node* nod) { head = nod; }	// head will store the address.
 	// Constructor with parameter which assigns a pointer to head.
 
+	// Copy constructor.
+	InvList(const InvList& list)
+		:
+		head(list.head),
+		listSize(list.listSize)
+
+	{}
+
 	//~InventoryList() { cout << "List Destructor " << endl; }
 
 

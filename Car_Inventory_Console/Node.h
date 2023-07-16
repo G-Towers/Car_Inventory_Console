@@ -11,7 +11,7 @@ public:
 	// Default constructors.
 	Node()
 	{
-		key = 0;
+		key = 1;
 		rec;
 		next = nullptr;
 	}
@@ -41,11 +41,17 @@ public:
 	Record GetRecord() const { return rec; }
 	Node* GetNext() const { return next; }
 
+	// Overloads.
+	void operator++() { ++key; }	// prefix
+	void operator++(int) { key++; }	// postfix
+	void operator--() { --key; }	// prefix
+	void operator--(int) { key--; }	// postfix
 
 
 
-private:
-	int key;	// A unique key to identify and refer (access) the node.
+
+public:
+	int key;	// A unique value to identify and refer (access) the node.
 	Record rec;	// The data stored in that node.
 
 public:

@@ -15,11 +15,25 @@ public:
 
 	// Copy constructor.
 	InvList(const InvList& list)
-		:
-		head(list.head),
-		listSize(list.listSize)
+	{
+		Node* listPtr = list.GetHead();
+		Node* temp = nullptr;
+		
 
-	{}
+		while (listPtr != nullptr)
+		{
+			temp = new Node;
+			temp->SetKey(listPtr->GetKey());
+			temp->SetRecord(listPtr->GetRecord());
+			AppendNode(temp);
+			listSize++;
+
+			listPtr = listPtr->GetNext();
+		}
+
+	}
+
+
 
 	~InvList() 
 	{
@@ -34,6 +48,32 @@ public:
 		head = nullptr;
 		cout << "List Destroyed... " << endl;
 	}
+
+	// Overloads.
+	InvList& operator=(const InvList& list)
+	{
+		Node* listPtr = list.GetHead();
+		Node* temp = nullptr;
+
+
+		while (listPtr != nullptr)
+		{
+			temp = new Node;
+			temp->SetKey(listPtr->GetKey());
+			temp->SetRecord(listPtr->GetRecord());
+			AppendNode(temp);
+			listSize++;
+
+			listPtr = listPtr->GetNext();
+		}
+
+		return *this;
+	}
+
+	void operator++() { ++listSize; }	// prefix
+	void operator++(int) { listSize++; }	// postfix
+	void operator--() { --listSize; }	// prefix
+	void operator--(int) { listSize--; }	// postfix
 
 
 	// Access to members.
@@ -67,12 +107,6 @@ public:
 
 	void SetSize(int size) { listSize = size; }
 	// Set the listSize.
-
-	// Overloads.
-	void operator++() { ++listSize; }	// prefix
-	void operator++(int) { listSize++; }	// postfix
-	void operator--() { --listSize; }	// prefix
-	void operator--(int) { listSize--; }	// postfix
 
 private:
 	Node* head;	// Points to the first node object.

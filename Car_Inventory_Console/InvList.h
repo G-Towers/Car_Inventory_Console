@@ -21,7 +21,19 @@ public:
 
 	{}
 
-	//~InventoryList() { cout << "List Destructor " << endl; }
+	~InvList() 
+	{
+		Node* current = head;
+		while (current != nullptr) 
+		{
+			Node* next = current->next;
+			delete current;
+			current = next;
+		}
+
+		head = nullptr;
+		cout << "List Destroyed... " << endl;
+	}
 
 
 	// Access to members.

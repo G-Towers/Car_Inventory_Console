@@ -11,7 +11,7 @@ public:
 	// Default constructors.
 	Node()
 	{
-		key = 1;
+		key;
 		rec;
 		next = nullptr;
 	}
@@ -24,7 +24,24 @@ public:
 		next = nullptr;
 	}
 
+	// Copy constructor.
+	Node(const Node& nod)
+	{
+		this->key = nod.key;
+		this->rec = nod.rec;
+		this->next = nod.next;
+	}
+
 	// Overloads.
+	Node& operator=(const Node& nod)
+	{
+		this->key = nod.key;
+		this->rec = nod.rec;
+		this->next = nod.next;
+
+		return *this;
+	}
+
 	void operator++() { ++key; }	// prefix
 	void operator++(int) { key++; }	// postfix
 	void operator--() { --key; }	// prefix
@@ -47,18 +64,13 @@ public:
 	Record GetRecord() const { return rec; }
 	Node* GetNext() const { return next; }
 
-	
-
-
-
+public:
+	int key = 1;	// A unique value to identify and refer (access) the node.
+	Record rec;		// The data stored in that node.
 
 public:
-	int key;	// A unique value to identify and refer (access) the node.
-	Record rec;	// The data stored in that node.
-
-public:
-	Node* next;	// A pointer of type Node that points to the next Node. Points to an object/class
-				// of Node type only.
+	Node* next = nullptr;	// A pointer of type Node that points to the next Node. Points to an object/class
+							// of Node type only.
 
 };
 

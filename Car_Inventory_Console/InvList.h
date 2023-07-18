@@ -7,10 +7,16 @@ class InvList
 {
 public:
 	
-	InvList() { head = nullptr; }
+	InvList() 
+	{
+		head = nullptr;
+	}
 	// Default constructor that initializes the head to null.
 	
-	InvList(Node* nod) { head = nod; }	// head will store the address.
+	InvList(Node* nod) 
+	{
+		head = nod;	// head will store the address.
+	}	
 	// Constructor with parameter which assigns a pointer to head.
 
 	// Copy constructor.
@@ -88,6 +94,7 @@ public:
 	
 	void AppendNode(Node* nod);	// Passes a node by pointer (address).
 	// Appends a Node to the list (end of list).
+	// Uses dynamic memory allocation.
 
 	void PrependNode(Node* nod);
 	// Prepends a Node to the list (Attaches at start).

@@ -29,12 +29,15 @@ Node* InvList::NodeExists(int key)	// Pass key value.
 }
 
 // Appends a Node to the list (end of list).
-void InvList::AppendNode(Node* nod)	// Passes a node by pointer (address).
+void InvList::AppendNode(Node* nod)	// Passes the nodes address by pointer.
 {
+	Node* tempNode = new Node;	// Allocate on the heap.
+	tempNode = nod;
+
 	// Check to see if the key value is in the list.
-	if (NodeExists(nod->GetKey()) != nullptr)
+	if (NodeExists(tempNode->GetKey()) != nullptr)
 	{
-		std::cout << "Node already exists with key value of " << nod->GetKey()
+		std::cout << "Node already exists with key value of " << tempNode->GetKey()
 			<< ". Please append with a different key value." << endl;
 	}
 
@@ -43,7 +46,7 @@ void InvList::AppendNode(Node* nod)	// Passes a node by pointer (address).
 		// Head will be pointing to nullptr when the list is empty.
 		if (head == nullptr)
 		{
-			head = nod;	// assign the address of n to head.
+			head = tempNode;	// assign the address of n to head.
 			//cout << "Node Appended." << endl;
 		}
 
@@ -59,7 +62,7 @@ void InvList::AppendNode(Node* nod)	// Passes a node by pointer (address).
 				// until nullptr is encountered.
 			}
 
-			ptr->SetNext(nod);	// Assign the address of its next pointer to the new node.
+			ptr->SetNext(tempNode);	// Assign the address of its next pointer to the new node.
 			//cout << "Node Appended." << endl;
 		}
 	}

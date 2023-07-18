@@ -71,18 +71,21 @@ void InvList::AppendNode(Node* nod)	// Passes the nodes address by pointer.
 // Prepends a Node to the list (Attaches at start).
 void InvList::PrependNode(Node* nod)
 {
+	Node* tempNode = new Node;
+	tempNode = nod;
+
 	// Check to see if the key value is in the list.
-	if (NodeExists(nod->GetKey()) != nullptr)
+	if (NodeExists(tempNode->GetKey()) != nullptr)
 	{
-		cout << "Node already exists with key value of " << nod->GetKey()
+		cout << "Node already exists with key value of " << tempNode->GetKey()
 			<< ". Please prepend with a different key value." << endl;
 	}
 
 	//  Attach the node to the beginning of the list.
 	else
 	{
-		nod->SetNext(head);	// Since head is already pointing to the first node, assign head to n's next.
-		head = nod;	// Then head points to the new node.
+		tempNode->SetNext(head);	// Since head is already pointing to the first node, assign head to n's next.
+		head = tempNode;	// Then head points to the new node.
 		cout << "Node Prepended." << endl;
 	}
 }
@@ -90,6 +93,9 @@ void InvList::PrependNode(Node* nod)
 // Inserts a node at a specified location (after specified key)
 void InvList::InsertNodeAfter(int key, Node* nod)
 {
+	Node* tempNode = new Node;
+	tempNode = nod;
+
 	// Create a Node ptr to access the key value if it exists (acts like a temp pointer).
 	Node* ptr = NodeExists(key);	// Search the list for a particular key to insert after.
 
@@ -103,9 +109,9 @@ void InvList::InsertNodeAfter(int key, Node* nod)
 	else
 	{
 		// Make sure the key value of the new node is unique.
-		if (NodeExists(nod->GetKey()) != nullptr)
+		if (NodeExists(tempNode->GetKey()) != nullptr)
 		{
-			cout << "Node already exists with key value of " << nod->GetKey()
+			cout << "Node already exists with key value of " << tempNode->GetKey()
 				<< ". Please prepend with a different key value." << endl;
 		}
 
@@ -114,8 +120,8 @@ void InvList::InsertNodeAfter(int key, Node* nod)
 		{
 			// Linking must be in order because ptr's next address is overwritten.
 			// Remember, ptr is dereferncing so it's like your assigning to the nodes themselves.
-			nod->SetNext(ptr->GetNext());	// Assign ptr's next pointer to the new nodes next pointer (new nodes next pointer points to the next node).
-			ptr->SetNext(nod);	// Link the previous node to the new node using ptr.
+			tempNode->SetNext(ptr->GetNext());	// Assign ptr's next pointer to the new nodes next pointer (new nodes next pointer points to the next node).
+			ptr->SetNext(tempNode);	// Link the previous node to the new node using ptr.
 			cout << "Node Inserted." << endl;
 		}
 	}

@@ -7,16 +7,10 @@ class InvList
 {
 public:
 	
-	InvList() 
-	{
-		head = nullptr;
-	}
+	InvList() { head = nullptr; }
 	// Default constructor that initializes the head to null.
 	
-	InvList(Node* nod) 
-	{
-		head = nod;	// head will store the address.
-	}	
+	InvList(Node* nod) { head = nod;	}	// head will store the address.	
 	// Constructor with parameter which assigns a pointer to head.
 
 	// Copy constructor.
@@ -38,8 +32,6 @@ public:
 		}
 
 	}
-
-
 
 	~InvList() 
 	{

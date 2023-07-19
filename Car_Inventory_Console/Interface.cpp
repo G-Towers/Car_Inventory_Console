@@ -387,6 +387,7 @@ void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
 
 void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
 {
+    InvList inputList;  // Re-Implement to use inputList...
     int key;
     Record rec;
     ItemChoice ItemMenu = ItemChoice::INPUT_ITEM;
@@ -1382,8 +1383,24 @@ void DeleteItem(InvList& lstItem, ErrMsgs& err)
 
 void PrintInputRecord(InvStorage& inv)
 {
-    cout << "\nDisplay Entered Records --\n" << endl;
-    Print(inv); // Print records to screen.
+    cout << "Valid records: " << inv.inputCount << '\n' << endl;
+
+    cout << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
+        << "--------------------------------------------------------------------------------------------------------------" << endl;
+
+    if (inv.carCount == 0)
+    {
+        cout << "\nNo records to display." << endl;
+    }
+
+    else
+    {
+        // Print the array.
+        for (int i = 0; i < inv.inputCount; i++)
+        {
+            cout << ToString(inv.inputRec[i]) << endl;
+        }
+    }
 }
 
 void PrintItems()

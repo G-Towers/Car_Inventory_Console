@@ -45,25 +45,25 @@ void SwitchMainMenu(InvStorage& inv, ErrMsgs& err);
 // Switch statements for main menu using arrays.
 
 void SwitchMainMenu(InvList& lstItem, ErrMsgs& err);
-// Switch statement for main menu using linked list.
+// Switch statement for main menu (overloaded) for using linked list.
 
 void SwitchSortMenu(Record* ptrRec[], int& arrSize);
 // Switch statements for Sort Menu using arrays.
 
 void SwitchSortMenu(InvList& lstItem);
-// Switch statements for Sort menu using linked list.
+// Switch statements for Sort menu (overloaded) for using linked list.
 
 void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err);
 // Switch statements for Manage Item Menu using arrays.
 
 void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err);
-// Switch statements for manage item menu using linked list.
+// Switch statements for manage item menu (overloaded) for using linked list.
 
 void SwitchEditRecord(InvStorage& inv, ErrMsgs& err);	// Edits a record from the record file.
 // Switch statements for Edit Record Menu using arrays.
 
 void SwitchEditRecord(InvList& lstItem, ErrMsgs& err);
-// Switch statements for Edit Record Menu using linked list.
+// Switch statements for Edit Record Menu (overloaded) for using linked list.
 
 
 /********************************************* -- Sorting Functions -- ***************************************/

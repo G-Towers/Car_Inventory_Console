@@ -8,17 +8,17 @@ string ToStringKey(const Node* nod)
     stringstream ss;    // Declare a string stream var.
 
     // Set the key to at least 2 digits.
-    ss << "(" << setfill('0') << setw(2) << nod->GetKey() << setw(0) << setfill(' ') << ")";
+    ss << "(" << setfill('0') << setw(2) << nod->key << setw(0) << setfill(' ') << ")";
 
     // Set the decimal point.
     ss.setf(ios::fixed);
     ss.setf(ios::showpoint);
     ss.precision(2);
 
-    ss << setw(10) << ' ' << setw(14) << nod->GetRecord().GetID()
-        << setw(15) << ' ' << left << setw(20) << nod->GetRecord().GetModel()
-        << setw(5) << ' ' << right << setw(5) << nod->GetRecord().GetQuantity()
-        << setw(10) << ' ' << setw(10) << nod->GetRecord().GetPrice();
+    ss << setw(10) << ' ' << setw(14) << nod->rec.GetID()
+        << setw(15) << ' ' << left << setw(20) << nod->rec.GetModel()
+        << setw(5) << ' ' << right << setw(5) << nod->rec.GetQuantity()
+        << setw(10) << ' ' << setw(10) << nod->rec.GetPrice();
 
     return ss.str();
 
@@ -72,8 +72,8 @@ void ReadFileList(InvList& lstItem, ErrMsgs& err)
             rec.SetPrice(stof(prc));
 
             // Store in the linked list.
-            fileNode->SetKey(key);
-            fileNode->SetRecord(rec);
+            fileNode->key = key;
+            fileNode->rec = rec;
             lstItem.AppendNode(fileNode);
             lstItem++;
             key++;
@@ -160,19 +160,19 @@ void WriteFileList(InvList lstItem)
     // Write to the file.
     for (int i = 0; i < lstItem.GetSize() - 1; i++)
     {
-        outputFile << tmp->GetRecord().GetID() << " "
-            << tmp->GetRecord().GetModel() << " "
-            << tmp->GetRecord().GetQuantity() << " "
-            << tmp->GetRecord().GetPrice()
+        outputFile << tmp->rec.GetID() << " "
+            << tmp->rec.GetModel() << " "
+            << tmp->rec.GetQuantity() << " "
+            << tmp->rec.GetPrice()
             << endl;
 
-        tmp = tmp->GetNext();
+        tmp = tmp->next;
     }
 
-    outputFile << tmp->GetRecord().GetID() << " "
-        << tmp->GetRecord().GetModel() << " "
-        << tmp->GetRecord().GetQuantity() << " "
-        << tmp->GetRecord().GetPrice();
+    outputFile << tmp->rec.GetID() << " "
+        << tmp->rec.GetModel() << " "
+        << tmp->rec.GetQuantity() << " "
+        << tmp->rec.GetPrice();
 
 
     // Close the file.
@@ -219,8 +219,8 @@ void SearchList(InvList& lstItem, InvList& searchList, string target)
         temp = new Node();
 
         // Temporary lowercase strings for ID and model.
-        string tempID = ToLower(ptr->GetRecord().GetID());
-        string tempModel = ToLower(ptr->GetRecord().GetModel());
+        string tempID = ToLower(ptr->rec.GetID());
+        string tempModel = ToLower(ptr->rec.GetModel());
 
         // Search string tempID, char_arr is the target, start at index 0, search 3 chars.
         idFound = tempID.find(char_arr, 0, 3);
@@ -229,8 +229,8 @@ void SearchList(InvList& lstItem, InvList& searchList, string target)
         // Check each node for the target value (Linear Search).
         if (tempID == tempTarget || tempModel == tempTarget)
         {
-            temp->SetKey(ptr->GetKey());
-            temp->SetRecord(ptr->GetRecord());
+            temp->key = ptr->key;
+            temp->rec = ptr->rec;
             linearLst.AppendNode(temp);
             linearLst++;
         }
@@ -238,13 +238,13 @@ void SearchList(InvList& lstItem, InvList& searchList, string target)
         // Partial search.
         else if ((idFound != string::npos || modelFound != string::npos))
         {
-            temp->SetKey(ptr->GetKey());
-            temp->SetRecord(ptr->GetRecord());
+            temp->key = ptr->key;
+            temp->rec = ptr->rec;
             partialLst.AppendNode(temp);
             partialLst++;
         }
 
-        ptr = ptr->GetNext(); // Store the address of the next node.
+        ptr = ptr->next; // Store the address of the next node.
         // This is how the traversal is incremented from node to node.
     }
 
@@ -270,16 +270,16 @@ int SearchIDList(const InvList& lstItem, string target)
     while (tmpPtr != nullptr)
     {
         // Temporary lowercase strings for ID.
-        string tempID = ToLower(tmpPtr->GetRecord().GetID());
+        string tempID = ToLower(tmpPtr->rec.GetID());
 
         // Compare records (linear search).
         if (tempID == tempTarget)
         {
-            key = tmpPtr->GetKey();
+            key = tmpPtr->key;
             return key;
         }
 
-        tmpPtr = tmpPtr->GetNext(); // Traverse.
+        tmpPtr = tmpPtr->next; // Traverse.
 
     }
 
@@ -294,12 +294,12 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id)
 
     while (tmpPtr != nullptr)   // Iterate through the list.
     {
-        if (tmpPtr->GetRecord().GetID() == id)
+        if (tmpPtr->rec.GetID() == id)
         {
             return true;
         }
 
-        tmpPtr = tmpPtr->GetNext(); // Store the address of the next node.
+        tmpPtr = tmpPtr->next; // Store the address of the next node.
         // This is how the traversal is incremented from node to node.
     }
 
@@ -325,7 +325,7 @@ void PrintList(const InvList& list)
         while (temp != nullptr)
         {
             cout << ToStringKey(temp) << endl;
-            temp = temp->GetNext();
+            temp = temp->next;
 
         }
 
@@ -353,7 +353,7 @@ void PrintSearchResultsList(const InvList& list)
         while (temp != nullptr)
         {
             cout << ToStringKey(temp) << endl;
-            temp = temp->GetNext();
+            temp = temp->next;
 
         }
 
@@ -365,9 +365,9 @@ void PrintSearchResultsList(const InvList& list)
 
 Node* SwapPtr(Node* swpPtr1, Node* swpPtr2)
 {
-    Node* tmp = swpPtr2->GetNext();
-    swpPtr2->SetNext(swpPtr1);
-    swpPtr1->SetNext(tmp);
+    Node* tmp = swpPtr2->next;
+    swpPtr2->next = swpPtr1;
+    swpPtr1->next = tmp;
 
     return swpPtr2;
 
@@ -388,7 +388,7 @@ void BubbleSortList(Node** head_in, int list_size, bool(*cmp)(const Node*, const
         for (int j = 0; j < list_size - i - 1; j++)
         {
             ptr1 = *tmpPtr;
-            ptr2 = ptr1->GetNext();
+            ptr2 = ptr1->next;
 
             if (cmp(ptr1, ptr2))
             {

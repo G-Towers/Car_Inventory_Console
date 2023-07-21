@@ -23,12 +23,12 @@ public:
 		while (listPtr != nullptr)
 		{
 			temp = new Node;
-			temp->SetKey(listPtr->GetKey());
-			temp->SetRecord(listPtr->GetRecord());
+			temp->key = listPtr->key;
+			temp->rec = listPtr->rec;
 			AppendNode(temp);
 			listSize++;
 
-			listPtr = listPtr->GetNext();
+			listPtr = listPtr->next;
 		}
 
 	}
@@ -57,12 +57,12 @@ public:
 		while (listPtr != nullptr)
 		{
 			temp = new Node;
-			temp->SetKey(listPtr->GetKey());
-			temp->SetRecord(listPtr->GetRecord());
+			temp->key = listPtr->key;
+			temp->rec = listPtr->rec;
 			AppendNode(temp);
 			listSize++;
 
-			listPtr = listPtr->GetNext();
+			listPtr = listPtr->next;
 		}
 
 		return *this;

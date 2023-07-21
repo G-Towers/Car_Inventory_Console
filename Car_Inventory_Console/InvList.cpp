@@ -15,13 +15,13 @@ Node* InvList::NodeExists(int key)	// Pass key value.
 // Traverse the list using address's and ptr pointer.
 	while (ptr != nullptr)	// Iterate through the entire list.
 	{
-		if (ptr->GetKey() == key)	// Check each node for the key value.
+		if (ptr->key == key)	// Check each node for the key value.
 		{
 			temp = ptr;	// if the key being passed is in the list
 			// temp will be assigned the address of that node.
 		}
 
-		ptr = ptr->GetNext(); // Store the address of the next node.
+		ptr = ptr->next; // Store the address of the next node.
 		// This is how the traversal is incremented from node to node.
 	}
 
@@ -35,9 +35,9 @@ void InvList::AppendNode(Node* nod)	// Passes the nodes address by pointer.
 	tempNode = nod;
 
 	// Check to see if the key value is in the list.
-	if (NodeExists(tempNode->GetKey()) != nullptr)
+	if (NodeExists(tempNode->key) != nullptr)
 	{
-		std::cout << "Node already exists with key value of " << tempNode->GetKey()
+		std::cout << "Node already exists with key value of " << tempNode->key
 			<< ". Please append with a different key value." << endl;
 	}
 
@@ -56,13 +56,13 @@ void InvList::AppendNode(Node* nod)	// Passes the nodes address by pointer.
 			Node* ptr = head;	// Pointer used for iterating through the list (initialised to the beginning of the list).
 
 			// Traverse to the end of the list.
-			while (ptr->GetNext() != nullptr)
+			while (ptr->next != nullptr)
 			{
-				ptr = ptr->GetNext();	// ptr points to the next node
+				ptr = ptr->next;	// ptr points to the next node
 				// until nullptr is encountered.
 			}
 
-			ptr->SetNext(tempNode);	// Assign the address of its next pointer to the new node.
+			ptr->next = tempNode;	// Assign the address of its next pointer to the new node.
 			//cout << "Node Appended." << endl;
 		}
 	}
@@ -75,16 +75,16 @@ void InvList::PrependNode(Node* nod)
 	tempNode = nod;
 
 	// Check to see if the key value is in the list.
-	if (NodeExists(tempNode->GetKey()) != nullptr)
+	if (NodeExists(tempNode->key) != nullptr)
 	{
-		cout << "Node already exists with key value of " << tempNode->GetKey()
+		cout << "Node already exists with key value of " << tempNode->key
 			<< ". Please prepend with a different key value." << endl;
 	}
 
 	//  Attach the node to the beginning of the list.
 	else
 	{
-		tempNode->SetNext(head);	// Since head is already pointing to the first node, assign head to n's next.
+		tempNode->next = head;	// Since head is already pointing to the first node, assign head to n's next.
 		head = tempNode;	// Then head points to the new node.
 		cout << "Node Prepended." << endl;
 	}
@@ -109,9 +109,9 @@ void InvList::InsertNodeAfter(int key, Node* nod)
 	else
 	{
 		// Make sure the key value of the new node is unique.
-		if (NodeExists(tempNode->GetKey()) != nullptr)
+		if (NodeExists(tempNode->key) != nullptr)
 		{
-			cout << "Node already exists with key value of " << tempNode->GetKey()
+			cout << "Node already exists with key value of " << tempNode->key
 				<< ". Please prepend with a different key value." << endl;
 		}
 
@@ -120,8 +120,8 @@ void InvList::InsertNodeAfter(int key, Node* nod)
 		{
 			// Linking must be in order because ptr's next address is overwritten.
 			// Remember, ptr is dereferncing so it's like your assigning to the nodes themselves.
-			tempNode->SetNext(ptr->GetNext());	// Assign ptr's next pointer to the new nodes next pointer (new nodes next pointer points to the next node).
-			ptr->SetNext(tempNode);	// Link the previous node to the new node using ptr.
+			tempNode->next = ptr->next;	// Assign ptr's next pointer to the new nodes next pointer (new nodes next pointer points to the next node).
+			ptr->next = tempNode;	// Link the previous node to the new node using ptr.
 			cout << "Node Inserted." << endl;
 		}
 	}
@@ -140,9 +140,9 @@ void InvList::DeleteNodeByKey(int key)
 	else if (head != nullptr)
 	{
 		// if node to delete is the head node
-		if (head->GetKey() == key)
+		if (head->key == key)
 		{
-			head = head->GetNext();	// point the head to the node after (unlinking it).
+			head = head->next;	// point the head to the node after (unlinking it).
 			cout << "Item " << key << " Deleted." << endl;	// Node is not deleted, it's simply unlinked.
 		}
 
@@ -151,26 +151,26 @@ void InvList::DeleteNodeByKey(int key)
 		{
 			Node* temp = nullptr;	// To store the node if/when found.
 			Node* prevPtr = head;	// Stores the current pointer initialized to the beginning of the list.
-			Node* currentPtr = head->GetNext();	// Stores the current pointer to search the list.
+			Node* currentPtr = head->next;	// Stores the current pointer to search the list.
 
 			// traverse the list to search for key to delete.
 			while (currentPtr != nullptr)
 			{
-				if (currentPtr->GetKey() == key)
+				if (currentPtr->key == key)
 				{
 					temp = currentPtr;	// When key is found, assign to temp.
 					currentPtr = nullptr;	// set to nullptr to exit loop.
 				}
 				else
 				{
-					prevPtr = prevPtr->GetNext();	// Increment the prevPtr.
-					currentPtr = currentPtr->GetNext();	// Increment the currentPtr.
+					prevPtr = prevPtr->next;	// Increment the prevPtr.
+					currentPtr = currentPtr->next;	// Increment the currentPtr.
 				}
 			}
 
 			if (temp != nullptr)	// if key is found (temp will stay null if nothing found).
 			{
-				prevPtr->SetNext(temp->GetNext());	// Previous pointer points to node after temp (deleting the node).
+				prevPtr->next = temp->next;	// Previous pointer points to node after temp (deleting the node).
 				cout << "Item " << key << " Deleted." << endl;
 			}
 
@@ -191,7 +191,7 @@ void InvList::UpdateNodeByKey(int key, Record rec)
 
 	if (ptr != nullptr)	// if key exists
 	{
-		ptr->SetRecord(rec);	// update data value.
+		ptr->rec = rec;	// update data value.
 		cout << "Node data updated successfully." << endl;
 	}
 

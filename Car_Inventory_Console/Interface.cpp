@@ -409,10 +409,10 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
         case ItemChoice::INPUT_ITEM:
             key = PromptKey(lstItem);
             rec = InputRecord(err);
-            inputNode->SetKey(key);
-            inputNode->SetRecord(rec);
-            lstItem.AppendNode(inputNode);
-            lstItem++;
+            inputNode->key = key;
+            inputNode->rec = rec;
+            inputList.AppendNode(inputNode);
+            inputList++;
             cout << "\nNode Appended." << endl;
             break;
         case ItemChoice::EDIT_ITEM:
@@ -422,7 +422,7 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
             DeleteItem(lstItem, err);
             break;
         case ItemChoice::PRINT_ITEM:
-            PrintList(lstItem);
+            PrintList(inputList);
 
             break;
         case ItemChoice::SAVE_ITEM:
@@ -618,9 +618,9 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
         // Display record if found.
         tmpPtr = lstItem.NodeExists(key);
 
-        cout << "\nItem found:\n\n" << tmpPtr->GetRecord().GetID() << " -- "
-            << tmpPtr->GetRecord().GetModel() << " -- " << tmpPtr->GetRecord().GetQuantity() << " -- "
-            << tmpPtr->GetRecord().GetPrice() << "\n"
+        cout << "\nItem found:\n\n" << tmpPtr->rec.GetID() << " -- "
+            << tmpPtr->rec.GetModel() << " -- " << tmpPtr->rec.GetQuantity() << " -- "
+            << tmpPtr->rec.GetPrice() << "\n"
             << "\nList Item: " << key << endl;
 
         // Redo this...
@@ -641,10 +641,10 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
             EditChoice editMenu = EditChoice::EDIT_ID;   // Initialize.
 
             // Store temporary record.
-            tempRec.SetID(tmpPtr->GetRecord().GetID());
-            tempRec.SetModel(tmpPtr->GetRecord().GetModel());
-            tempRec.SetQuantity(tmpPtr->GetRecord().GetQuantity());
-            tempRec.SetPrice(tmpPtr->GetRecord().GetPrice());
+            tempRec.SetID(tmpPtr->rec.GetID());
+            tempRec.SetModel(tmpPtr->rec.GetModel());
+            tempRec.SetQuantity(tmpPtr->rec.GetQuantity());
+            tempRec.SetPrice(tmpPtr->rec.GetPrice());
 
             do
             {
@@ -657,27 +657,27 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
                 {
                 case EditChoice::EDIT_ID:
                     tempRec.SetID(InputID(err));
-                    tmpPtr->SetRecord(tempRec);
+                    tmpPtr->rec = tempRec;
                     cout << "\nID updated." << endl;
                     break;
                 case EditChoice::EDIT_MODEL:
                     tempRec.SetModel(InputModel(err));
-                    tmpPtr->SetRecord(tempRec);
+                    tmpPtr->rec = tempRec;
                     cout << "\nModel updated." << endl;
                     break;
                 case EditChoice::EDIT_QUANTITY:
                     tempRec.SetQuantity(stoi(InputQuantity(err)));
-                    tmpPtr->SetRecord(tempRec);
+                    tmpPtr->rec = tempRec;
                     cout << "\nQuantity updated." << endl;
                     break;
                 case EditChoice::EDIT_PRICE:
                     tempRec.SetPrice(stof(InputPrice(err)));
-                    tmpPtr->SetRecord(tempRec);
+                    tmpPtr->rec = tempRec;
                     cout << "\nPrice updated." << endl;
                     break;
                 case EditChoice::EDIT_RECORD:
                     tempRec = InputRecord(err);
-                    tmpPtr->SetRecord(tempRec);
+                    tmpPtr->rec = tempRec;
                     cout << "\nRecord updated." << endl;
                     break;
                 case EditChoice::DISPLAY_RECORD:
@@ -721,7 +721,7 @@ void SortID(InvList& lstItem)
 
     // Bubble sort using lambda expression.
     BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
-        { return ToLower(n1->GetRecord().GetID()) > ToLower(n2->GetRecord().GetID()); });
+        { return ToLower(n1->rec.GetID()) > ToLower(n2->rec.GetID()); });
 
     lstItem.SetHead(headNode);
 
@@ -749,7 +749,7 @@ void SortModel(InvList& lstItem)
     Node* headNode = lstItem.GetHead();
 
     BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
-        { return ToLower(n1->GetRecord().GetModel()) > ToLower(n2->GetRecord().GetModel()); });
+        { return ToLower(n1->rec.GetModel()) > ToLower(n2->rec.GetModel()); });
 
     lstItem.SetHead(headNode);
 
@@ -776,7 +776,7 @@ void SortQuantity(InvList& lstItem)
     Node* headNode = lstItem.GetHead();
 
     BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
-        { return n1->GetRecord().GetQuantity() > n2->GetRecord().GetQuantity(); });
+        { return n1->rec.GetQuantity() > n2->rec.GetQuantity(); });
 
     lstItem.SetHead(headNode);
 
@@ -803,7 +803,7 @@ void SortPrice(InvList& lstItem)
     Node* headNode = lstItem.GetHead();
 
     BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
-        { return n1->GetRecord().GetPrice() > n2->GetRecord().GetPrice(); });
+        { return n1->rec.GetPrice() > n2->rec.GetPrice(); });
 
     lstItem.SetHead(headNode);
 
@@ -820,7 +820,7 @@ void SortKey(InvList& lstItem)
     Node* headNode = lstItem.GetHead();
 
     BubbleSortList(&headNode, lstItem.GetSize(), [](const Node* n1, const Node* n2)
-        { return n1->GetKey() > n2->GetKey(); });
+        { return n1->key > n2->key; });
 
     lstItem.SetHead(headNode);
 
@@ -1217,7 +1217,7 @@ int PromptKey(InvList& lstItem)
 
     while (tmp != nullptr)
     {
-        cout << "\nList item already exists with key value of " << tmp->GetKey()
+        cout << "\nList item already exists with key value of " << key
             << ". Please Enter a different key value." << endl;
 
         cout << "\nEnter key: ";
@@ -1352,9 +1352,9 @@ void DeleteItem(InvList& lstItem, ErrMsgs& err)
         tmpPtr = lstItem.NodeExists(key);
 
 
-        cout << "\nRecord found: " << tmpPtr->GetRecord().GetID() << " "
-            << tmpPtr->GetRecord().GetModel() << " " << tmpPtr->GetRecord().GetQuantity() << " "
-            << tmpPtr->GetRecord().GetPrice() << "\n"
+        cout << "\nRecord found: " << tmpPtr->rec.GetID() << " "
+            << tmpPtr->rec.GetModel() << " " << tmpPtr->rec.GetQuantity() << " "
+            << tmpPtr->rec.GetPrice() << "\n"
             << "List Item: " << key << endl;
 
         cout << "\nDelete Item on file? (y/n): ";

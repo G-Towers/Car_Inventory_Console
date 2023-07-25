@@ -388,7 +388,7 @@ void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
 void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
 {
     InvList inputList;  // Re-Implement to use inputList...
-    int key;
+    int key = 0;
     Record rec;
     ItemChoice ItemMenu = ItemChoice::INPUT_ITEM;
 
@@ -398,8 +398,8 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
 
         int userInput = MenuUserInput();
 
-        // Allocate dynamic memory (make n1 globally accessible).
-        // Allows n1 to be used for every iteration of the do while loop.
+        // Allocate dynamic memory (make inputNode globally accessible).
+        // Allows inputNode to be used for every iteration of the do while loop.
         Node* inputNode = new Node();
 
         ItemMenu = (ItemChoice)userInput; // cast to enum type.
@@ -407,7 +407,7 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
         switch (ItemMenu)
         {
         case ItemChoice::INPUT_ITEM:
-            key = PromptKey(lstItem);
+            key = AssignKey(lstItem, key);
             rec = InputRecord(err);
             inputNode->key = key;
             inputNode->rec = rec;
@@ -426,8 +426,9 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
 
             break;
         case ItemChoice::SAVE_ITEM:
-            SaveItems(lstItem);
-
+            //SaveItems(lstItem);
+            AppendList(lstItem, inputList);
+            cout << "\nInput list appended to main list." << endl;
             break;
         case ItemChoice::PREV_MENU:
             break;
@@ -1235,6 +1236,38 @@ int PromptKey(InvList& lstItem)
     }
 
     return stoi(key);
+}
+
+int AssignKey(InvList& lstItem, int& key_in)
+{
+    if (key_in == 0)
+        key_in = lstItem.GetSize() + 1;
+
+    else
+        key_in++;
+    
+    cout << "\nThe new item will have a key position of " << key_in << endl;
+
+    return key_in;
+}
+
+void AppendList(InvList& lstItem, InvList& inList)
+{
+    Node* listPtr = inList.GetHead(); // first node in inList.
+    Node* temp;
+
+    while (listPtr != nullptr)
+    {
+        temp = new Node;
+        temp->key = listPtr->key;
+        temp->rec = listPtr->rec;
+        lstItem.AppendNode(temp);
+        lstItem++;
+
+        listPtr = listPtr->next;
+    }
+
+    
 }
 
 void DeleteRecord(InvStorage& inv, ErrMsgs& err)

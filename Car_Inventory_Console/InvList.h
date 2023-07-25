@@ -78,6 +78,12 @@ public:
 	Node* GetHead() const { return head; }
 	void SetHead(Node* head) { this->head = head; }
 
+	int GetSize() const { return listSize; }
+	// Get the size of the list.
+
+	void SetSize(int size) { listSize = size; }
+	// Set the listSize.
+
 	Node* NodeExists(int key);	// Pass key value.
 	// Checks if Node exists using key value.
 	// Manages whether key value is duplicated or not (key must be unique to each node).
@@ -101,11 +107,12 @@ public:
 	// Update the node with a new data value.
 	// Accesses the node by key value and updates data.
 
-	int GetSize() const { return listSize; }
-	// Get the size of the list.
+	Node* GetCurrentNode(Node* head, int key);
+	// Returns current node at key value.
+	// Takes the head of the list and key positon as arguments.
+	// Returns node at key position.
 
-	void SetSize(int size) { listSize = size; }
-	// Set the listSize.
+
 
 private:
 	Node* head;	// Points to the first node object.

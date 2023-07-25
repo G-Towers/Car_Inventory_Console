@@ -67,7 +67,8 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err);
 
 
 /********************************************* -- Sorting Functions -- ***************************************/
-
+// Functions for switch statements on sort menu.
+// Uses parallel array of pointers and lambda expressions for sorting.
 
 void SortID(Record* arr[], int& arrSize);
 // Sorts by ID in an array.
@@ -96,10 +97,10 @@ void SortPrice(InvList& lstItem);
 void SortKey(InvList& lstItem);
 // Sorts by key in a linked list.
 
-// Functions for switch statements on sort menu.
-// Uses parallel array of pointers and lambda expressions for sorting.
 
-
+/********************************************* -- Input Functions -- ***************************************/
+// Functions used by switch statements on Manage Item Menu
+// for Record input.
 
 Record InputRecord(InvStorage& inv, ErrMsgs& err);
 Record InputRecord(ErrMsgs& err);	// Input new records to input array.
@@ -109,8 +110,8 @@ string InputModel(ErrMsgs& err);
 string InputQuantity(ErrMsgs& err);
 string InputPrice(ErrMsgs& err);
 int PromptKey(InvList& lstItem);
-// Functions used by switch statements on Manage Item Menu.
-
+int AssignKey(InvList& lstItem, int& key_in);
+void AppendList(InvList& lstItem, InvList& inList);
 
 
 void DeleteRecord(InvStorage& inv, ErrMsgs& err);	// Deletes a record from the record file.

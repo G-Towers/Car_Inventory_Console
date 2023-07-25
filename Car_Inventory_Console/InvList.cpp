@@ -202,3 +202,19 @@ void InvList::UpdateNodeByKey(int key, Record rec)
 	}
 }
 
+Node* InvList:: GetCurrentNode(Node* head, int key) 
+{
+	Node* current = head;
+	int count = 0;
+
+	while (current != nullptr) 
+	{
+		if (count == key)
+			return current;
+
+		count++;
+		current = current->next;
+	}
+	return nullptr;
+}
+

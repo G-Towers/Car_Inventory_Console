@@ -134,7 +134,7 @@ void ReadFileList(InvList& lstItem, ErrMsgs& err)
 
 }
 
-void WriteFileList(InvList lstItem)
+void WriteFileList(InvList& lstItem)
 {
     Node* tmp = lstItem.GetHead();
 
@@ -332,6 +332,16 @@ void PrintList(const InvList& list)
         cout << endl;
 
     }
+}
+
+void PrintListRecord(const InvList& list)
+{
+    Node* temp = list.GetHead();
+
+    cout << "\n" << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
+        << "--------------------------------------------------------------------------------------------------------------" << endl;
+
+    cout << ToStringKey(temp) << endl;
 }
 
 void PrintSearchResultsList(const InvList& list)

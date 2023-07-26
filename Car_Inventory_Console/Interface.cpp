@@ -387,7 +387,7 @@ void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
 
 void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
 {
-    InvList inputList;  // Re-Implement to use inputList...
+    InvList inputList;  // Store input to a separate list. 
     int key = 0;
     Record rec;
     ItemChoice ItemMenu = ItemChoice::INPUT_ITEM;
@@ -426,9 +426,9 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
 
             break;
         case ItemChoice::SAVE_ITEM:
-            //SaveItems(lstItem);
             AppendList(lstItem, inputList);
-            cout << "\nInput list appended to main list." << endl;
+            SaveItems(lstItem);
+            cout << "\nNew items saved to record file." << endl;
             break;
         case ItemChoice::PREV_MENU:
             break;
@@ -682,7 +682,7 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
                     cout << "\nRecord updated." << endl;
                     break;
                 case EditChoice::DISPLAY_RECORD:
-                    PrintList(lstItem);
+                    PrintRecord(tempRec);
                     break;
                 case EditChoice::SAVE_RECORD:
                     SaveItems(lstItem);

@@ -14,7 +14,7 @@ void ReadFileList(InvList& lstItem, ErrMsgs& err);
 // Precondition: "record.txt" must be available to read input from.
 // Postcondition: Validated records from  input file are written to the linked list.
 
-void WriteFileList(InvList lstItem);
+void WriteFileList(InvList& lstItem);
 // Writes to the output file (replaces all).
 
 void Search(InvList& lstItem);
@@ -33,7 +33,10 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id);
 // Returns true if ID exists otherwise returns false.
 
 void PrintList(const InvList& list);
-// Prints the list
+// Prints the list.
+
+void PrintListRecord(const InvList& list);
+// Prints a single record in a list.
 
 void PrintSearchResultsList(const InvList& list);
 // Print search results to the screen.

@@ -23,12 +23,13 @@ public:
     }
 
 
-    void SetErrMsgs(string id, string mdl, string quant, string prc)
+    void SetErrMsgs(string id, string mdl, string quant, string prc, string exst)
     {
         idErrMsg = id;
         mdlErrMsg = mdl;
         quantErrMsg = quant;
         prcErrMsg = prc;
+        idExistsErrMsg = exst;
 
     }
 
@@ -41,7 +42,7 @@ public:
 
     void ResetErrStrings()
     {
-        SetErrMsgs("", "", "", "");
+        SetErrMsgs("", "", "", "", "");
     }
 
 public:
@@ -50,6 +51,7 @@ public:
     string mdlErrMsg  = "";
     string quantErrMsg = "";
     string prcErrMsg = "";
+    string idExistsErrMsg = "";
 
     int errCount = 0;    // How many records with errors in file.
 

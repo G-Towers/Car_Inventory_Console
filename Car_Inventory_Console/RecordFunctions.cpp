@@ -72,8 +72,9 @@ void ReadFile(InvStorage& inv, ErrMsgs& err)
         // Read each line and assign to strings.
         inputFile >> id >> mod >> quant >> prc;
 
+
         // Validate and store valid data.
-        if (IDValid(id) && ModelValid(mod) && QuantityValid(quant) && PriceValid(prc))
+        if (IDValid(id) && ModelValid(mod) && QuantityValid(quant) && PriceValid(prc) && !IDExists(inv, id))
         {
             // Write entries to record array.
             inv.carRec[inv.carCount].SetID(ToUpper(id));
@@ -110,6 +111,11 @@ void ReadFile(InvStorage& inv, ErrMsgs& err)
             if (!PriceValid(prc, err))
             {
                 err.errorMsgs[err.errCount] += err.prcErrMsg;
+            }
+
+            if (IDExists(inv, id, err))
+            {
+                err.errorMsgs[err.errCount] += err.idExistsErrMsg;
             }
 
             err.errCount++;  // Count for records with errors.
@@ -777,8 +783,23 @@ bool IDExists(const InvStorage& inv, string id)
 {
     for (size_t i = 0; i < inv.carCount; i++)
     {
-        if (ToLower(id) == ToLower(inv.carRec->GetID()))
+        if (ToLower(id) == ToLower(inv.carRec[i].GetID()))
         {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool IDExists(const InvStorage& inv, string id, ErrMsgs& err)
+{
+    for (size_t i = 0; i < inv.carCount; i++)
+    {
+        if (ToLower(id) == ToLower(inv.carRec[i].GetID()))
+        {
+            err.idExistsErrMsg += "-- The ID is a duplicate.\n";
+
             return true;
         }
     }

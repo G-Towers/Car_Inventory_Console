@@ -92,6 +92,10 @@ bool IDExists(const InvStorage& inv, string id);
 // Uses linear search to determine whether ID is in use
 // Returns true if ID exists otherwise returns false.
 
+bool IDExists(const InvStorage& inv, string id, ErrMsgs& err);
+// Checks if ID is being used.
+// Writes error message if true.
+
 void PrintSearchResults(const RecordArray& arr);
 // Print search results to the screen.
 

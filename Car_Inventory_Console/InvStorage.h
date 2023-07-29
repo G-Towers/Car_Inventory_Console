@@ -34,7 +34,7 @@ public:
         }
     }
 
-    void ResetCartRec()
+    void ResetCarRec()
     {
         delete[] carRec;
         carRec = new Record[MAX_SIZE];

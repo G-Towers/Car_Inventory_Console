@@ -759,10 +759,10 @@ int SearchID(const InvStorage& inv, string target)
     Record linearSrch[MAX_SIZE]; // Array for items found from linear search.
 
     // Iterate through the records.
-    for (int i = 0; i < inv.carCount; i++)
+    for (int i = 0; i < inv.rawCount; i++)
     {
         // Temporary lowercase strings for ID.
-        string tempID = ToLower(inv.carRec[i].GetID());
+        string tempID = ToLower(inv.rawCarRec[i].GetID());
 
         // Compare records (linear search).
         if (tempTarget == tempID)

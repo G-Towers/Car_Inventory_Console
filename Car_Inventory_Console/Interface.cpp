@@ -532,7 +532,7 @@ void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
                     break;
                 case EditChoice::EDIT_QUANTITY:
                     quantEdit = InputQuantity(err);
-                    quantR = int(quantEdit[0]);     // Convert string to int.
+                    quantR = stoi(quantEdit);     // Convert string to int.
                     tempRecEdit.SetQuantity(quantR);    // Set int to Record object.
                     if (tempRecEdit.GetQuantity() == 114)
                     {
@@ -547,7 +547,7 @@ void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
                     break;
                 case EditChoice::EDIT_PRICE:
                     prcEdit = InputPrice(err);
-                    prcR = float(prcEdit[0]);     // Convert string to float.
+                    prcR = stof(prcEdit);     // Convert string to float.
                     tempRecEdit.SetPrice(prcR);    // Set float to Record object.
                     if (tempRecEdit.GetPrice() == 114.0)
                     {
@@ -569,8 +569,10 @@ void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
                 case EditChoice::SAVE_RECORD:
                     inv.rawCarRec[index] = tempRec;
                     WriteFile(inv);
-                    ReadFile(inv, err);
                     cout << "\nRecord replaced." << endl;
+                    inv.ResetCarRec();
+                    ReadFile(inv, err);
+                    
                     break;
                 case EditChoice::BACK_PREV:
                     break;

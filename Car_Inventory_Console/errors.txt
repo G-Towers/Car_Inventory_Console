@@ -1,29 +1,60 @@
-AB34"-KM Fusi%on_5 -10 0
+AB34"-KM Fusi%on_5 -10 0.00
  -- ID must be 7 characters long.
  -- ID must contain only alpha-numeric characters.
  -- Model must contain only alpha-numeric or underscore characters.
  -- Quantity must be a positve number or 0.
- -- Price must be at least 4 characters,
-    and not more than 10 characters long.
+ -- Price must be greater than 0.
 
-AC9971x Str^oLLer 25 0
+AC9971x Str^oLLer 25 0.00
  -- Model must contain only alpha-numeric or underscore characters.
- -- Price must be at least 4 characters,
-    and not more than 10 characters long.
+ -- Price must be greater than 0.
 
 AB7005B almeria 26 -10.00
  -- Price must be greater than 0.
 
-2df 123_car -5 0
+2df 123_car -5 0.00
  -- ID must be 7 characters long.
  -- First 2 characters in ID must be alpha characters.
  -- First 2 characters in ID must be letters A - F.
  -- The first character in model must be an alpha character.
  -- Quantity must be a positve number or 0.
- -- Price must be at least 4 characters,
-    and not more than 10 characters long.
+ -- Price must be greater than 0.
 
-fa22258 Universe 15 000.00
+fa22258 Universe 15 0.00
+ -- Price must be greater than 0.
+
+aa11111 AlphaRed 5 123596.52
+-- The ID is a duplicate.
+
+aa12345 Car_111 5 12.00
+-- The ID is a duplicate.
+
+BB22222 MODEL_BEELZY 10 123450.56
+-- The ID is a duplicate.
+
+AB34"-KM Fusi%on_5 -10 0.00
+ -- ID must be 7 characters long.
+ -- ID must contain only alpha-numeric characters.
+ -- Model must contain only alpha-numeric or underscore characters.
+ -- Quantity must be a positve number or 0.
+ -- Price must be greater than 0.
+
+AC9971x Str^oLLer 25 0.00
+ -- Model must contain only alpha-numeric or underscore characters.
+ -- Price must be greater than 0.
+
+AB7005B almeria 26 -10.00
+ -- Price must be greater than 0.
+
+2df 123_car -5 0.00
+ -- ID must be 7 characters long.
+ -- First 2 characters in ID must be alpha characters.
+ -- First 2 characters in ID must be letters A - F.
+ -- The first character in model must be an alpha character.
+ -- Quantity must be a positve number or 0.
+ -- Price must be greater than 0.
+
+fa22258 Universe 15 0.00
  -- Price must be greater than 0.
 
 aa11111 AlphaRed 5 123596.52

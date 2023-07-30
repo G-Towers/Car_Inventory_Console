@@ -532,30 +532,32 @@ void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
                     break;
                 case EditChoice::EDIT_QUANTITY:
                     quantEdit = InputQuantity(err);
-                    quantR = stoi(quantEdit);     // Convert string to int.
-                    tempRecEdit.SetQuantity(quantR);    // Set int to Record object.
-                    if (tempRecEdit.GetQuantity() == 114)
+                    
+                    if (quantEdit == "r")
                     {
                         cout << "\nAborted..." << endl;
                         break;
                     }
                     else
                     {
+                        quantR = stoi(quantEdit);     // Convert string to int.
+                        tempRecEdit.SetQuantity(quantR);    // Set int to Record object.
                         tempRec.SetQuantity(quantR);
                         cout << "\nQuantity successfully updated." << endl;
                     }
                     break;
                 case EditChoice::EDIT_PRICE:
                     prcEdit = InputPrice(err);
-                    prcR = stof(prcEdit);     // Convert string to float.
-                    tempRecEdit.SetPrice(prcR);    // Set float to Record object.
-                    if (tempRecEdit.GetPrice() == 114.0)
+                    
+                    if (prcEdit == "r")
                     {
                         cout << "\nAborted..." << endl;
                         break;
                     }
                     else
                     {
+                        prcR = stof(prcEdit);     // Convert string to float.
+                        tempRecEdit.SetPrice(prcR);    // Set float to Record object.
                         tempRec.SetPrice(prcR);
                         cout << "\nPrice successfully updated." << endl;
                     }
@@ -571,6 +573,8 @@ void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
                     WriteFile(inv);
                     cout << "\nRecord replaced." << endl;
                     inv.ResetCarRec();
+                    err.ResetErrStrings();
+                    err.ResetErrArr();
                     ReadFile(inv, err);
                     
                     break;

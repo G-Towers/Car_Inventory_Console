@@ -23,9 +23,6 @@ AB7005B almeria 26 -10.00
 fa22258 Universe 15 0.00
  -- Price must be greater than 0.
 
-aa11111 AlphaRed 5 123596.52
--- The ID is a duplicate.
-
 aa12345 Car_111 5 12.00
 -- The ID is a duplicate.
 

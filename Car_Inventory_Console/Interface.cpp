@@ -365,7 +365,10 @@ void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
             break;
         case ItemChoice::DELETE_ITEM:
             DeleteRecord(inv, err);
+            inv.ResetCarRec();
+            inv.ResetRawCarRec();
             ReadFile(inv, err);
+            RawReadFile(inv);
             break;
         case ItemChoice::PRINT_ITEM:
             PrintInputRecord(inv);
@@ -373,7 +376,12 @@ void SwitchManageItemMenu(InvStorage& inv, ErrMsgs& err)
         case ItemChoice::SAVE_ITEM:
             SaveRecord(inv);
             inv.ResetInputRec();
+            inv.ResetCarRec();
+            inv.ResetRawCarRec();
+            err.ResetErrStrings();
+            err.ResetErrArr();
             ReadFile(inv, err);
+            RawReadFile(inv);
             break;
         case ItemChoice::PREV_MENU:
             break;
@@ -573,10 +581,11 @@ void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
                     WriteFile(inv);
                     cout << "\nRecord replaced." << endl;
                     inv.ResetCarRec();
+                    inv.ResetRawCarRec();
                     err.ResetErrStrings();
                     err.ResetErrArr();
                     ReadFile(inv, err);
-                    
+                    RawReadFile(inv);
                     break;
                 case EditChoice::BACK_PREV:
                     break;
@@ -1319,9 +1328,9 @@ void DeleteRecord(InvStorage& inv, ErrMsgs& err)
     else
     {
         // Display record if found.
-        cout << "\nRecord found: " << inv.carRec[index].GetID() << " "
-            << inv.carRec[index].GetModel() << " " << inv.carRec[index].GetQuantity() << " "
-            << inv.carRec[index].GetPrice() << "\n"
+        cout << "\nRecord found: " << inv.rawCarRec[index].GetID() << " "
+            << inv.rawCarRec[index].GetModel() << " " << inv.rawCarRec[index].GetQuantity() << " "
+            << inv.rawCarRec[index].GetPrice() << "\n"
             << "Index: " << index << endl;
 
         cout << "\nDelete record on file? (y/n): ";
@@ -1330,11 +1339,11 @@ void DeleteRecord(InvStorage& inv, ErrMsgs& err)
 
         if (resp == "Y" || resp == "YES")
         {
-            for (int i = index; i < inv.carCount - 1; i++)
+            for (int i = index; i < inv.rawCount - 1; i++)
             {
-                inv.carRec[i] = inv.carRec[i + 1];
+                inv.rawCarRec[i] = inv.rawCarRec[i + 1];
             }
-            inv.carCount--;
+            inv.rawCount--;
 
             WriteFile(inv);
             cout << "\nRecord deleted." << endl;

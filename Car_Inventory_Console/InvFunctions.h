@@ -35,7 +35,7 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id);
 void PrintList(const InvList& list);
 // Prints the list.
 
-void PrintListRecord(const InvList& list);
+void PrintListRecord(const Node* nod);
 // Prints a single record in a list.
 
 void PrintSearchResultsList(const InvList& list);

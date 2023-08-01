@@ -697,7 +697,7 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
                     cout << "\nRecord updated." << endl;
                     break;
                 case EditChoice::DISPLAY_RECORD:
-                    PrintRecord(tempRec);
+                    PrintListRecord(tmpPtr);
                     break;
                 case EditChoice::SAVE_RECORD:
                     SaveItems(lstItem);

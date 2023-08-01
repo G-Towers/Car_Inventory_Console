@@ -626,7 +626,7 @@ void Print(const InvStorage& inv)
 
 }
 
-void PrintRecord(Record& rec)
+void PrintRecord(const Record& rec)
 {
     cout << "\n" << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
         << "--------------------------------------------------------------------------------------------------------------" << endl;

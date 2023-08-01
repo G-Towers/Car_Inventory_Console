@@ -67,7 +67,7 @@ void Print(const InvStorage& inv);
 // Precondition: Takes a Record array object and array size is passed by reference.
 // Postcondition: Prints the formatted Record array object to the screen.
 
-void PrintRecord(Record& rec);
+void PrintRecord(const Record& rec);
 // Prints a single record.
 
 string ToString(const Record& rec);

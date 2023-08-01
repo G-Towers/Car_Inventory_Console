@@ -334,14 +334,14 @@ void PrintList(const InvList& list)
     }
 }
 
-void PrintListRecord(const InvList& list)
+void PrintListRecord(const Node* nod)
 {
-    Node* temp = list.GetHead();
+    //Node* temp = list.GetHead();
 
-    cout << "\n" << setw(23) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
+    cout << "Key" << setw(20) << "ID" << setw(25) << "Model" << setw(25) << "Quantity" << setw(21) << "$, Price\n"
         << "--------------------------------------------------------------------------------------------------------------" << endl;
 
-    cout << ToStringKey(temp) << endl;
+    cout << ToStringKey(nod) << endl;
 }
 
 void PrintSearchResultsList(const InvList& list)

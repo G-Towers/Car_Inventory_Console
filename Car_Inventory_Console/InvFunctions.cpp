@@ -62,7 +62,7 @@ void ReadFileList(InvList& lstItem, ErrMsgs& err)
         inputFile >> id >> mod >> quant >> prc;
 
         // Validate and store valid data.
-        if (IDValid(id) && ModelValid(mod) && QuantityValid(quant) && PriceValid(prc))
+        if (IDValid(id) && ModelValid(mod) && QuantityValid(quant) && PriceValid(prc) && !IDExistsList(lstItem, id))
         {
 
             // Set to record.
@@ -103,6 +103,11 @@ void ReadFileList(InvList& lstItem, ErrMsgs& err)
             if (!PriceValid(prc, err))
             {
                 err.errorMsgs[err.errCount] += err.prcErrMsg;
+            }
+
+            if (IDExistsList(lstItem, id, err))
+            {
+                err.errorMsgs[err.errCount] += err.idExistsErrMsg;
             }
 
             err.errCount++;  // Count for records with errors.
@@ -286,9 +291,8 @@ int SearchIDList(const InvList& lstItem, string target)
     return -1;
 }
 
-bool IDExistsList(const InvList& lstItem, const int& list_size, string id)
+bool IDExistsList(const InvList& lstItem, string id)
 {
-    //Node* tmp = nullptr; 
     Node* tmpPtr = lstItem.GetHead();  // Local pointer for this function only.
     // used to assign the node head is pointing to (while traversing the list).
 
@@ -301,6 +305,26 @@ bool IDExistsList(const InvList& lstItem, const int& list_size, string id)
 
         tmpPtr = tmpPtr->next; // Store the address of the next node.
         // This is how the traversal is incremented from node to node.
+    }
+
+    return false;
+}
+
+bool IDExistsList(const InvList& lstItem, string id, ErrMsgs& err)
+{
+    Node* tmpPtr = lstItem.GetHead();
+
+
+    while (tmpPtr != nullptr)
+    {
+        if (tmpPtr->rec.GetID() == id)
+        {
+            err.idExistsErrMsg += "-- The ID is a duplicate.\n";
+            return true;
+        }
+
+        tmpPtr = tmpPtr->next;
+
     }
 
     return false;

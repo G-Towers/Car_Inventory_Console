@@ -28,9 +28,13 @@ int SearchIDList(const InvList& lstItem, string target);
 // Uses linear search to search for ID. Returns the Key of ID if found.
 // Otherwise returns -1.
 
-bool IDExistsList(const InvList& lstItem, const int& list_size, string id);
+bool IDExistsList(const InvList& lstItem, string id);
 // Uses linear search to determine whether ID is in use.
 // Returns true if ID exists otherwise returns false.
+
+bool IDExistsList(const InvList& lstItem, string id, ErrMsgs& err);
+// Determines whether the ID is in use (overloaded).
+// Prints error message if the ID is in use.
 
 void PrintList(const InvList& list);
 // Prints the list.

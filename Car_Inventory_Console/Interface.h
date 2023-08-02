@@ -111,7 +111,7 @@ string InputQuantity(ErrMsgs& err);
 string InputPrice(ErrMsgs& err);
 int PromptKey(InvList& lstItem);
 int AssignKey(InvList& lstItem, int& key_in);
-void AppendList(InvList& lstItem, InvList& inList);
+void AppendList(InvList& lstItem, InvList& inList);	// Appends one list to another.
 
 
 void DeleteRecord(InvStorage& inv, ErrMsgs& err);	// Deletes a record from the record file.

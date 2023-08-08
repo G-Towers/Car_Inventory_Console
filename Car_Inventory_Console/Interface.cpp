@@ -580,12 +580,13 @@ void SwitchEditRecord(InvStorage& inv, ErrMsgs& err)
                     inv.rawCarRec[index] = tempRec;
                     WriteFile(inv);
                     cout << "\nRecord replaced." << endl;
-                    inv.ResetCarRec();
+                    inv.ResetCarRec();  // Reset arrays.
                     inv.ResetRawCarRec();
-                    err.ResetErrStrings();
+                    err.ResetErrStrings();  // Reset error object.
                     err.ResetErrArr();
                     ReadFile(inv, err);
                     RawReadFile(inv);
+                    editMenu = EditChoice::BACK_PREV;   // Go back to Manage Item Menu.
                     break;
                 case EditChoice::BACK_PREV:
                     break;

@@ -298,7 +298,7 @@ bool IDExistsList(const InvList& lstItem, string id)
 
     while (tmpPtr != nullptr)   // Iterate through the list.
     {
-        if (tmpPtr->rec.GetID() == id)
+        if (ToLower(tmpPtr->rec.GetID()) == ToLower(id))
         {
             return true;
         }
@@ -317,7 +317,7 @@ bool IDExistsList(const InvList& lstItem, string id, ErrMsgs& err)
 
     while (tmpPtr != nullptr)
     {
-        if (tmpPtr->rec.GetID() == id)
+        if (ToLower(tmpPtr->rec.GetID()) == ToLower(id))
         {
             err.idExistsErrMsg += "-- The ID is a duplicate.\n";
             return true;

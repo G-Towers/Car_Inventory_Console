@@ -103,9 +103,9 @@ void SortKey(InvList& lstItem);
 // for Record input.
 
 Record InputRecord(InvStorage& inv, ErrMsgs& err);
-Record InputRecord(ErrMsgs& err);	// Input new records to input array.
+Record InputRecord(InvList& lstItem, ErrMsgs& err);	// Input new records to input array.
 string InputID(InvStorage& inv, ErrMsgs& err);
-string InputID(ErrMsgs& err);
+string InputID(InvList& lstItem, ErrMsgs& err);
 string InputModel(ErrMsgs& err);
 string InputQuantity(ErrMsgs& err);
 string InputPrice(ErrMsgs& err);

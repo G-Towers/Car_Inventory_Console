@@ -416,7 +416,7 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
         {
         case ItemChoice::INPUT_ITEM:
             key = AssignKey(lstItem, key);
-            rec = InputRecord(err);
+            rec = InputRecord(lstItem, err);
             inputNode->key = key;
             inputNode->rec = rec;
             inputList.AppendNode(inputNode);
@@ -673,7 +673,7 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
                 switch (editMenu)
                 {
                 case EditChoice::EDIT_ID:
-                    tempRec.SetID(InputID(err));
+                    tempRec.SetID(InputID(lstItem, err));
                     tmpPtr->rec = tempRec;
                     cout << "\nID updated." << endl;
                     break;
@@ -693,7 +693,7 @@ void SwitchEditRecord(InvList& lstItem, ErrMsgs& err)
                     cout << "\nPrice updated." << endl;
                     break;
                 case EditChoice::EDIT_RECORD:
-                    tempRec = InputRecord(err);
+                    tempRec = InputRecord(lstItem, err);
                     tmpPtr->rec = tempRec;
                     cout << "\nRecord updated." << endl;
                     break;
@@ -894,12 +894,12 @@ Record InputRecord(InvStorage& inv, ErrMsgs& err)
 
 }
 
-Record InputRecord(ErrMsgs& err)
+Record InputRecord(InvList& lstItem, ErrMsgs& err)
 {
     string id, mod, quant, prc;
     Record tempRec; // Temporary Record.
 
-    id = InputID(err);
+    id = InputID(lstItem, err);
     tempRec.SetID(id);
 
     mod = InputModel(err);
@@ -1034,15 +1034,18 @@ string InputID(InvStorage& inv, ErrMsgs& err)
     return id;
 }
 
-string InputID(ErrMsgs& err)
+string InputID(InvList& lstItem, ErrMsgs& err)
 {
-    string id;
+    string id = "";
 
     // Prompt the user for ID.
     cout << "\nCar ID's are 7 characters long,\n"
         << "The first 2 characters must be letters A - F.\n"
-        << "\nEnter a unique ID: ";
+        << "\nEnter a unique ID ( r to return to menu): ";
     getline(cin, id);
+
+    if (id == "r" || id == "R")
+        return id;
 
     // Check if nothing is entered.
     while (id == "")
@@ -1050,6 +1053,9 @@ string InputID(ErrMsgs& err)
         cout << "\nYou didn't enter anything!\n";
         cout << "\nEnter ID: ";
         getline(cin, id);
+
+        if (id == "r" || id == "R")
+            return id;
     }
 
     while (!IDValid(id, err))
@@ -1059,12 +1065,87 @@ string InputID(ErrMsgs& err)
         cout << "\nEnter ID: ";
         getline(cin, id);
 
+        if (id == "r" || id == "R")
+            return id;
+
         // Check if nothing is entered again.
         while (id == "")
         {
             cout << "\nYou didn't enter anything!\n";
             cout << "\nEnter ID: ";
             getline(cin, id);
+
+            if (id == "r" || id == "R")
+                return id;
+        }
+
+        // Check if ID exists.
+        while (IDExistsList(lstItem, id))
+        {
+            cout << "\nThat ID is already in use." << endl;
+            cout << "\nEnter ID: ";
+            getline(cin, id);
+
+            if (id == "r" || id == "R")
+                return id;
+
+            // Check if nothing is entered again.
+            while (id == "")
+            {
+                cout << "\nYou didn't enter anything!\n";
+                cout << "\nEnter ID: ";
+                getline(cin, id);
+
+                if (id == "r" || id == "R")
+                    return id;
+            }
+
+        }
+
+    }
+
+    // Check if ID exists.
+    while (IDExistsList(lstItem, id))
+    {
+        cout << "\nThat ID is already in use." << endl;
+        cout << "\nEnter ID: ";
+        getline(cin, id);
+
+        if (id == "r" || id == "R")
+            return id;
+
+        // Check if nothing is entered again.
+        while (id == "")
+        {
+            cout << "\nYou didn't enter anything!\n";
+            cout << "\nEnter ID: ";
+            getline(cin, id);
+
+            if (id == "r" || id == "R")
+                return id;
+        }
+
+        while (!IDValid(id, err))
+        {
+            cout << "\nID invalid...\n"
+                << "\n" << err.idErrMsg << "\n";
+            cout << "\nEnter ID: ";
+            getline(cin, id);
+
+            if (id == "r" || id == "R")
+                return id;
+
+            // Check if nothing is entered again.
+            while (id == "")
+            {
+                cout << "\nYou didn't enter anything!\n";
+                cout << "\nEnter ID: ";
+                getline(cin, id);
+
+                if (id == "r" || id == "R")
+                    return id;
+            }
+
         }
 
     }

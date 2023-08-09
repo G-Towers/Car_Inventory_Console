@@ -437,6 +437,7 @@ void SwitchManageItemMenu(InvList& lstItem, ErrMsgs& err)
             AppendList(lstItem, inputList);
             SaveItems(lstItem);
             cout << "\nNew items saved to record file." << endl;
+            inputList.ResetList();
             break;
         case ItemChoice::PREV_MENU:
             break;

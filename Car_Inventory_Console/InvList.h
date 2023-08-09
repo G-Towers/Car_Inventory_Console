@@ -47,6 +47,20 @@ public:
 		cout << "List Destroyed... " << endl;
 	}
 
+	void ResetList()
+	{
+		Node* current = head;
+		while (current != nullptr)
+		{
+			Node* next = current->next;
+			delete current;
+			current = next;
+		}
+
+		head = nullptr;
+		cout << "List Reset... " << endl;
+	}
+
 	// Overloads.
 	InvList& operator=(const InvList& list)
 	{
